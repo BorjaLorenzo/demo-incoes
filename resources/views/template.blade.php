@@ -62,7 +62,6 @@
         $(document).ready(function () {
           $('.a-click').click(function (e) { 
             e.preventDefault();
-            
             let id=$( this ).attr('id');
             window.location.href=id;
           });
