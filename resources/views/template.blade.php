@@ -54,6 +54,14 @@
         #preloader .spinner-border {
             margin-top: -2em;
         } */
+        .fila-roja {
+            background-color: lightcoral !important
+        }
+
+        .is-invalid {
+            border-color: red;
+            color: red
+        }
     </style>
     @bukStyles(true)
 </head>
@@ -113,6 +121,40 @@
 
         function ocultarPreloader() {
             Swal.close();
+        }
+
+        function vaciarYRellenarTabla() {
+            // Realiza la petición Ajax
+            mostrarPreloader();
+            var formData = {
+                _token: $('meta[name="csrf-token"]').attr('content')
+            };
+            $.ajax({
+                url: '/resfrescar/tabla/trabajadores', // Cambia esto por la URL de tu servidor que devolverá los datos
+                method: 'POST',
+                data: formData,
+                dataType: 'json',
+                success: function(data) {
+                    // Vaciar la tabla
+                    $('table').DataTable().clear();
+                    data.forEach(element => {
+                        $('table').DataTable().row.add([
+                            element.dni,
+                            element.name,
+                            element.surname,
+                            element.phone,
+                            element.rol,
+                            '<button type="button" class="btn btn-primary editmodal" data-toggle="modal" data-target="#editarModal"><i class="bi bi-pencil-square"></i></button> <button type="button" class="btn btn-info" data-toggle="modal" data-target="#verModal"><i class="bi bi-eye"></i></button> <button type="button" class="btn btn-danger deletealert" data-toggle="modal" data-target="#eliminarModal"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16"> <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5ZM11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H2.506a.58.58 0 0 0-.01 0H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1h-.995a.59.59 0 0 0-.01 0H11Zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5h9.916Zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47ZM8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5Z" /></svg></button>',
+                        ]).draw().node();
+                    });
+                    console.log(data);
+                    ocultarPreloader();
+                },
+                error: function() {
+                    ocultarPreloader();
+                    console.error('Error al obtener los datos.');
+                }
+            });
         }
         $(document).ready(function() {
             var token = $('meta[name="csrf-token"]').attr('content');
@@ -366,6 +408,7 @@
                     }
 
                 },
+                paging: false
             });
 
             $('.editmodal').click(function(e) {
@@ -543,7 +586,7 @@
                     if (result.isConfirmed) {
                         mostrarPreloader();
                         let dni = $(this).parent().siblings().eq(0).text();
-
+                        let fila = $(this).parent().parent();
                         // Obtener los datos del formulario
                         var formData = {
                             dni: dni
@@ -558,17 +601,10 @@
                             data: formData,
                             dataType: "json",
                             success: function(response) {
-                                console.log(response);
+                                //console.log(response);
                                 if (response) {
-                                    $.ajax({
-                                        type: "",
-                                        url: "url",
-                                        data: "data",
-                                        dataType: "dataType",
-                                        success: function (response) {
-                                            
-                                        }
-                                    });
+                                    //console.log(fila);
+                                    fila.remove();
                                     Swal.fire(
                                         'Deleted!',
                                         'Your file has been deleted.',
@@ -617,6 +653,40 @@
                             '</option>');
                     }
                 });
+            $('#submit').click(function(e) {
+                e.preventDefault();
+                // let name=$('#name').val();
+                // let surname=$('#surname').val();
+                // let sex=$('#sex').val();
+                // let phone=$('#phone').val();
+                // let dni_type=$('#dni_type').val();
+                // let dni=$('#dni').val();
+                // let country=$('#country').val();
+                // let email=$('#email').val();
+                // let rol=$('#rol').val();
+                var fields = $('#editForm').find('input[type="text"], select');
+                var isFormValid = true;
+                fields.each(function() {
+                    var field = $(this);
+
+                    if (field.val() == '' || field.val() == null) {
+                        console.log(field);
+                        isFormValid = false;
+                        field.addClass(
+                            'is-invalid'); // Agregar clase 'is-invalid' para resaltar campos vacíos
+                        $('#errorMessage').show();
+                    } else {
+                        field.removeClass(
+                            'is-invalid'); // Eliminar clase 'is-invalid' si el campo no está vacío
+
+                    }
+                    if (isFormValid) {
+                        $('#errorMessage').hide();
+                        //form.unbind('submit').submit();
+                    }
+                });
+            });
+
         });
     </script>
     @bukScripts(true)

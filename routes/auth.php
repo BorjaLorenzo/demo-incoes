@@ -64,6 +64,6 @@ Route::middleware('auth')->group(function () {
     Route::post('/desactivar/Trabajador', [Workers::class, 'deleteWorker'])
         ->name('deleteWorker');
 
-    Route::post('/resfrescar/tabla/trabajadores', [Workers::class, 'deleteWorker'])
+    Route::post('/resfrescar/tabla/trabajadores', [Workers::class, 'RefrescarDatatableWorkers'])
         ->name('refreshTableWorkers');
 });

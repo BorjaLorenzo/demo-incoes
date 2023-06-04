@@ -41,12 +41,15 @@ class Workers extends Controller
         return response()->json($this->workers->deleteWorker($request->dni));
     }
 
-    public function RefrescarDatatableWorkers($rol=false){
+    public function RefrescarDatatableWorkers(){
+        
+        $rol=Auth::user()->rol;
+
         if ($rol=="root") {
             $workers=$this->workers->getWorkersAll();
         } else {
             $workers=$this->workers->getWorkersAllByClient(Auth::user()->company);
         }
-        return response()->json($workers[0]);
+        return response()->json($workers);
     }
 }
