@@ -66,4 +66,7 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/resfrescar/tabla/trabajadores', [Workers::class, 'RefrescarDatatableWorkers'])
         ->name('refreshTableWorkers');
+
+        Route::post('/editar/formulario/trabajadores', [Workers::class, 'editarTrabajador'])
+        ->name('editarTrabajador');
 });

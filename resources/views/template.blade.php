@@ -62,6 +62,10 @@
             border-color: red;
             color: red
         }
+
+        select>option {
+            color: black
+        }
     </style>
     @bukStyles(true)
 </head>
@@ -72,7 +76,7 @@
     <div class="container">
         <nav class="navbar navbar-expand-lg sticky-top bg-body-tertiary bg-dark " data-bs-theme="dark">
             <div class="container-fluid ">
-                <a class="navbar-brand" href="#">INCOES</a>
+                <a class="navbar-brand" href="dashboard">INCOES</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false"
                     aria-label="Toggle navigation">
@@ -106,6 +110,8 @@
         crossorigin="anonymous"></script>
     <script src="//cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.10/dist/sweetalert2.all.min.js"></script>
+
+    <script src=""></script>
     <script>
         function mostrarPreloader() {
             Swal.fire({
@@ -117,6 +123,14 @@
                     Swal.showLoading()
                 },
             });
+        }
+
+        function basicAlert(titulo,comentario='',tipo='succes') {
+            Swal.fire(
+                titulo,
+                comentario,
+                tipo
+            )
         }
 
         function ocultarPreloader() {
@@ -439,10 +453,12 @@
                         $('#phone').val(response.phone);
                         $('#dni_type').val(response.identification);
                         $('#dni').val(response.dni);
+                        $('#dni_old').val(response.dni);
                         $('#country').val(response.country);
                         $('#email').val(response.email);
-                        //$('').val(response);
+                        $('#rol').val(response.rol);
                         ocultarPreloader();
+
                         $('#editarModal').modal('toggle');
                     },
                     error: function(xhr, status, error) {
@@ -453,118 +469,6 @@
                     }
                 });
 
-            });
-            table.on('draw.dt', function() {
-                // Volver a ejecutar tu script después de cambiar de página
-                $('.editmodal').click(function(e) {
-                    e.preventDefault();
-                    mostrarPreloader();
-                    let dni = $(this).parent().siblings().eq(0).text();
-                    var token = $('meta[name="csrf-token"]').attr('content');
-                    // Obtener los datos del formulario
-                    var formData = {
-                        dni: dni
-                    };
-
-                    // Agregar el token CSRF a los datos del formulario
-                    formData._token = token;
-                    //console.log(token);
-                    //console.log(dni);
-                    $.ajax({
-                        type: "post",
-                        url: "/datosTrabajador",
-                        data: formData,
-                        dataType: "json",
-                        success: function(response) {
-                            //console.log(response);
-
-                            $('#name').val(response.name);
-                            $('#surname').val(response.surname);
-                            $('#sex').val(response.sex);
-                            $('#phone').val(response.phone);
-                            $('#dni_type').val(response.identification);
-                            $('#dni').val(response.dni);
-                            $('#country').val(response.country);
-                            $('#email').val(response.email);
-                            //$('').val(response);
-
-                            $('#editarModal').modal('toggle');
-                            ocultarPreloader();
-                        },
-                        error: function(xhr, status, error) {
-                            // Manejar el error
-                            console.log(xhr.responseText);
-                            ocultarPreloader();
-                        }
-                    });
-
-                });
-                $(".deletealert").click(function(e) {
-                    e.preventDefault();
-                    Swal.fire({
-                        title: 'Are you sure?',
-                        text: "You won't be able to revert this!",
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonColor: '#3085d6',
-                        cancelButtonColor: '#d33',
-                        allowOutsideClick: false,
-                        allowEscapeKey: false,
-                        confirmButtonText: 'Yes, delete it!'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            mostrarPreloader();
-                            let dni = $(this).parent().siblings().eq(0).text();
-
-                            // Obtener los datos del formulario
-                            var formData = {
-                                dni: dni
-                            };
-
-                            // Agregar el token CSRF a los datos del formulario
-                            formData._token = token;
-
-                            $.ajax({
-                                type: "post",
-                                url: "/desactivar/Trabajador",
-                                data: formData,
-                                dataType: "json",
-                                success: function(response) {
-                                    console.log(response);
-                                    if (response) {
-                                        Swal.fire(
-                                            'Deleted!',
-                                            'Your file has been deleted.',
-                                            'success'
-                                        )
-                                    } else {
-                                        Swal.fire({
-                                            title: 'Error',
-                                            text: "Something didn´t work, contact support",
-                                            icon: 'error',
-                                            allowOutsideClick: false,
-                                            allowEscapeKey: false,
-                                        })
-                                    }
-
-                                },
-                                error: function(xhr, status, error) {
-                                    // Manejar el error
-                                    ocultarPreloader();
-                                    console.log(xhr.responseText);
-                                    Swal.fire({
-                                        title: 'Error',
-                                        text: "Something didn´t work, contact support",
-                                        icon: 'error',
-                                        allowOutsideClick: false,
-                                        allowEscapeKey: false,
-                                    })
-                                }
-                            });
-
-                        }
-                    })
-                });
             });
 
             $('#closeEditModal').click(function(e) {
@@ -655,15 +559,7 @@
                 });
             $('#submit').click(function(e) {
                 e.preventDefault();
-                // let name=$('#name').val();
-                // let surname=$('#surname').val();
-                // let sex=$('#sex').val();
-                // let phone=$('#phone').val();
-                // let dni_type=$('#dni_type').val();
-                // let dni=$('#dni').val();
-                // let country=$('#country').val();
-                // let email=$('#email').val();
-                // let rol=$('#rol').val();
+                
                 var fields = $('#editForm').find('input[type="text"], select');
                 var isFormValid = true;
                 fields.each(function() {
@@ -680,11 +576,40 @@
                             'is-invalid'); // Eliminar clase 'is-invalid' si el campo no está vacío
 
                     }
-                    if (isFormValid) {
-                        $('#errorMessage').hide();
-                        //form.unbind('submit').submit();
-                    }
+                    
                 });
+                if (isFormValid) {
+                        $('#errorMessage').hide();
+                        mostrarPreloader();
+                        let formData = $('#editForm').serialize();
+                        $.ajax({
+                            type: "post",
+                            url: "/editar/formulario/trabajadores",
+                            data: formData,
+                            dataType: "json",
+                            success: function(response) {
+                                ocultarPreloader();
+                                $('#editarModal').modal('toggle');
+                                console.log(response);
+                                if (response) {
+                                    var titulo="Updated!";
+                                    var comentario="Worker update correctly.";
+                                    var tipo="success";
+                                } else {
+                                    var titulo="Error";
+                                    var comentario="Something didn´t work, contact support";
+                                    var tipo="error";
+                                }
+                                basicAlert(titulo,comentario,tipo);
+                            },
+                            error: function(xhr, status, error) {
+                                // Manejar el error
+
+                                console.log(xhr.responseText);
+                                ocultarPreloader();
+                            }
+                        });
+                    }
             });
 
         });

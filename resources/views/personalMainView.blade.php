@@ -44,8 +44,7 @@
                                 data-target="#editarModal" @if ($t->activo != 0)
                                 disabled
                             @endif><i class="bi bi-pencil-square"></i></button>
-                            <button type="button" class="btn btn-info" data-toggle="modal" data-target="#verModal"><i
-                                    class="bi bi-eye"></i></button>
+                            <button type="button" class="btn btn-info" data-toggle="modal" data-target="#verModal"><i class="bi bi-calendar-plus"></i></button>
                             <button type="button" class="btn btn-danger deletealert" data-toggle="modal"
                                 data-target="#eliminarModal" @if ($t->activo != 0)
                                     disabled
@@ -77,13 +76,14 @@
                         <div class="container">
                             <form action="#" method="post" id="editForm">
                                 @csrf
+                                <input type="hidden" name="dni_old" id="dni_old">
                                 <div class="row pb-4">
                                     <div class="col"><label for="name">Name:</label></div>
-                                    <div class="col"><input type="text" id="name"></div>
+                                    <div class="col"><input type="text" id="name" name="name"></div>
                                 </div>
                                 <div class="row pb-4">
                                     <div class="col"><label for="surname">Surname:</label></div>
-                                    <div class="col"><input type="text" id="surname"></div>
+                                    <div class="col"><input type="text" id="surname" name="surname"></div>
                                 </div>
                                 <div class="row pb-4">
                                     <div class="col"><label for="sex">Sex:</label></div>
@@ -97,7 +97,7 @@
                                 </div>
                                 <div class="row pb-4">
                                     <div class="col"><label for="phone">Phone:</label></div>
-                                    <div class="col"><input type="text" id="phone"></div>
+                                    <div class="col"><input type="text" id="phone" name="phone"></div>
                                 </div>
                                 <div class="row pb-4">
                                     <div class="col"><label for="dni_type">Identification Number:</label></div>
@@ -112,7 +112,7 @@
                                 </div>
                                 <div class="row pb-4">
                                     <div class="col"><label for="dni">Identification:</label></div>
-                                    <div class="col"><input type="text" id="dni"></div>
+                                    <div class="col"><input type="text" id="dni" name="dni"></div>
                                 </div>
 
                                 <div class="row pb-4">
@@ -125,7 +125,7 @@
                                 </div>
                                 <div class="row pb-4">
                                     <div class="col"><label for="email">Email:</label></div>
-                                    <div class="col"><input type="text" id="email"></div>
+                                    <div class="col"><input type="text" id="email" name="email"></div>
                                 </div>
                                 <div class="row">
                                     <div class="col"><label for="rol">Rol:</label></div>

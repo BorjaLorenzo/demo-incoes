@@ -45,4 +45,21 @@ class M_workers extends Model
 
         return $affected > 0;
     }
+    public function updateWorker($data)
+    {
+        $affected=DB::table('users')
+        ->where('dni', $data['dni_old'])
+        ->update([
+            'name' => $data['name'],
+            'surname' => $data['surname'],
+            'sex' => $data['sex'],
+            'phone' => $data['phone'],
+            'identification' => $data['dni_type'],
+            'dni' => $data['dni'],
+            'country' => $data['country'],
+            'email' => $data['email'],
+            'rol' => $data['rol'],
+        ]);
+        return $affected > 0;
+    }
 }
