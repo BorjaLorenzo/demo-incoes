@@ -14,14 +14,14 @@ class M_workers extends Model
     public function getWorkersAll()
     {
         $workers = DB::table('users')
-            ->select('dni', 'name', 'surname', 'phone', 'rol', 'company','activo')
+            ->select('dni', 'name', 'surname', 'phone', 'rol', 'company', 'activo')
             ->get();
         return $workers;
     }
     public function getWorkersAllByClient($clientCompanyID)
     {
         $workers = DB::table('users')
-            ->select('dni', 'name', 'surname', 'phone', 'rol','activo')
+            ->select('dni', 'name', 'surname', 'phone', 'rol', 'activo')
             ->where('company', $clientCompanyID)
             ->get();
         return $workers;
@@ -47,19 +47,36 @@ class M_workers extends Model
     }
     public function updateWorker($data)
     {
-        $affected=DB::table('users')
-        ->where('dni', $data['dni_old'])
-        ->update([
-            'name' => $data['name'],
-            'surname' => $data['surname'],
-            'sex' => $data['sex'],
-            'phone' => $data['phone'],
-            'identification' => $data['dni_type'],
-            'dni' => $data['dni'],
-            'country' => $data['country'],
-            'email' => $data['email'],
-            'rol' => $data['rol'],
-        ]);
+        $affected = DB::table('users')
+            ->where('dni', $data['dni_old'])
+            ->update([
+                'name' => $data['name'],
+                'surname' => $data['surname'],
+                'sex' => $data['sex'],
+                'phone' => $data['phone'],
+                'identification' => $data['dni_type'],
+                'dni' => $data['dni'],
+                'country' => $data['country'],
+                'email' => $data['email'],
+                'rol' => $data['rol'],
+            ]);
         return $affected > 0;
+    }
+
+    public function getHolidays($dni)
+    {
+        $vacaciones = DB::table('vacaciones')
+            ->where('dni', $dni)
+            ->get();
+
+        return $vacaciones;
+    }
+
+    public function setHolidays($inicio,$fin){
+        $resultado = DB::table('nombre_de_la_tabla')->insert([
+            'fecha_inicio' => $inicio,
+            'fecha_fin' => $fin,
+        ]);
+        return $resultado;
     }
 }

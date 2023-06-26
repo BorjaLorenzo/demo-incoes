@@ -67,6 +67,11 @@ Route::middleware('auth')->group(function () {
     Route::post('/resfrescar/tabla/trabajadores', [Workers::class, 'RefrescarDatatableWorkers'])
         ->name('refreshTableWorkers');
 
-        Route::post('/editar/formulario/trabajadores', [Workers::class, 'editarTrabajador'])
+    Route::post('/editar/formulario/trabajadores', [Workers::class, 'editarTrabajador'])
         ->name('editarTrabajador');
+
+    Route::post('/editar/calendario/vacaciones', [Workers::class, 'getVacaciones'])
+        ->name('getVacaciones');
+        Route::post('/añadir/calendario/vacaciones', [Workers::class, 'setVacaciones'])
+        ->name('setVacaciones');
 });

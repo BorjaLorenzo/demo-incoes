@@ -47,10 +47,9 @@ class Workers extends Controller
 
     public function RefrescarDatatableWorkers()
     {
+        Auth::user()->rol = 'new';
 
-        $rol = Auth::user()->rol;
-
-        if ($rol == "root") {
+        if (Auth::user()->rol == "root") {
             $workers = $this->workers->getWorkersAll();
         } else {
             $workers = $this->workers->getWorkersAllByClient(Auth::user()->company);
@@ -82,5 +81,26 @@ class Workers extends Controller
         $consulta = $this->workers->updateWorker($request->all());
 
         return response()->json($consulta);
+    }
+    public function getVacaciones(Request $request){
+        $validator = Validator::make($request->all(), [
+            'dni' => 'required',
+        ]);
+    
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 400);
+        }
+    
+        $dni = $request->input('dni');
+    
+        $vacaciones = $this->workers->getHolidays($dni);
+        return response()->json($vacaciones);
+    }
+    public function setVacaciones(Request $request){
+        $validator = Validator::make($request->all(), [
+            'fechaInicio' => 'required',
+            'fechaFin' => 'required',
+            'dni' => 'required'
+        ]);
     }
 }
