@@ -72,6 +72,13 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/editar/calendario/vacaciones', [Workers::class, 'getVacaciones'])
         ->name('getVacaciones');
-        Route::post('/añadir/calendario/vacaciones', [Workers::class, 'setVacaciones'])
+
+    Route::post('/añadir/calendario/vacaciones', [Workers::class, 'setVacaciones'])
         ->name('setVacaciones');
+
+    Route::post('/delete/calendario/vacaciones', [Workers::class, 'removeVacaciones'])
+        ->name('removeVacaciones');
+
+    Route::post('/add/trabajador', [Workers::class, 'addTrabajador'])
+        ->name('addTrabajador');
 });

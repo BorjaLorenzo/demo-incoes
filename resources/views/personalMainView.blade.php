@@ -7,6 +7,14 @@
                 <h2 class="text-center text-black" style="text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);">Trabajadores</h2>
             </div>
         </div>
+        <div class="row mt-4 dash-icon-hover justify-content-center">
+            <div class="col-1 d-flex justify-content-center adduser small">
+                {{ svg('ri-user-add-line') }}
+            </div>
+            <div class="col-1 d-flex justify-content-center pdf small">
+                {{ svg('feathericon-download') }}
+            </div>
+        </div>
         <div class="table-responsive">
             <table class="table table-hover table-striped" id="tabla">
                 <thead>
@@ -88,7 +96,6 @@
                                     <div class="col"><label for="sex">Sex:</label></div>
                                     <div class="col">
                                         <select name="sex" id="sex" class="custom-select" style="width: 95%">
-                                            <option value="" selected disabled>Choose an option</option>
                                             <option value="Male">Male</option>
                                             <option value="Female">Female</option>
                                         </select>
@@ -102,7 +109,6 @@
                                     <div class="col"><label for="dni_type">Identification Number:</label></div>
                                     <div class="col">
                                         <select name="dni_type" id="dni_type" class="custom-select" style="width: 95%">
-                                            <option value="" selected disabled>Choose an option</option>
                                             <option value="DNI">DNI</option>
                                             <option value="NIE">NIE</option>
                                             <option value="PASSPORT">PASSPORT</option>
@@ -118,7 +124,6 @@
                                     <div class="col"><label for="country">Country:</label></div>
                                     <div class="col"><select name="country" id="country" class="custom-select"
                                             style="width: 95%">
-                                            <option value="" selected disabled>Choose an option</option>
 
                                         </select></div>
                                 </div>
@@ -132,7 +137,6 @@
                                         <div class="col">
                                             <select name="rol" id="rol" class="custom-select"
                                                 style="width: 95%">
-                                                <option value="" selected disabled>Choose an option</option>
                                                 <option value="ENCARGADO">ENCARGADO</option>
                                                 <option value="TRABAJADOR">TRABAJADOR</option>
                                             </select>
@@ -164,7 +168,8 @@
                     <div class="modal-body">
                         <div class="row mb-4 botonesVacaciones">
                             <div class="col d-flex justify-content-center">
-                                <button id="btnAgregarEvento" class="btn btn-success" style="background-color: green;" data-bs-toggle="modal" data-bs-target="#añadirFecha">
+                                <button id="btnAgregarEvento" class="btn btn-success" style="background-color: green;"
+                                    data-bs-toggle="modal" data-bs-target="#añadirFecha">
                                     <i class="bi bi-plus-lg"></i>
                                     Añadir Vacaciones
                                 </button>
@@ -180,9 +185,9 @@
 
                         <div id="calendar"></div>
                     </div>
-                    <div class="modal-footer">
+                    {{-- <div class="modal-footer">
                         <button type="button" class="btn btn-primary">Save changes</button>
-                    </div>
+                    </div> --}}
                 </div>
             </div>
         </div>
@@ -192,7 +197,8 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel">Añadir Vacaciones</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="cerrarVacaciones"></button>
+                        <button type="button" class="btn btn-secondary cerrarVacaciones" data-bs-dismiss="modal"
+                            aria-label="Close" id="cerrarVacacionesAñadir"><i class="bi bi-x-lg"></i></button>
                     </div>
                     <div class="modal-body">
                         <form action="" method="post" id="añadirVacaciones">
@@ -204,12 +210,134 @@
 
                             <div class="form-group">
                                 <label for="fechaFin">Fecha de Fin:</label>
-                                <input type="text" id="fechaFin" name="fechaFin" class="form-control" style="display: none" required>
+                                <input type="text" id="fechaFin" name="fechaFin" class="form-control"
+                                    style="display: none" required>
                             </div>
                         </form>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" id="submitAñadirVacaciones">Guardar cambios</button>
+                        <button type="button" class="btn btn-primary" id="submitAñadirVacaciones">Guardar
+                            cambios</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="eliminarFecha" tabindex="-1" aria-labelledby="exampleModalLabel"
+            aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Eliminar Vacaciones</h5>
+                        <button type="button" class="btn btn-secondary cerrarVacaciones" data-bs-dismiss="modal"
+                            aria-label="Close"><i class="bi bi-x-lg"></i></button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="" method="post" id="eliminarVacaciones">
+                            @csrf
+                            <div class="form-check">
+                                <div class="container-fluid">
+                                    <div class="row justify-content-start eliminardias">
+
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" id="submitEliminarVacaciones">Guardar
+                            cambios</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="adduser" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"
+            data-bs-backdrop="static" data-bs-keyboard="false">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Añadir Trabajador</h5>
+                        <button type="button" class="btn btn-secondary cerrarUser" data-bs-dismiss="modal"
+                            aria-label="Close"><i class="bi bi-x-lg"></i></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container mt-5">
+                            <div class="row justify-content-center">
+                                <div class="col-md-6">
+                                    <form action="" method="post" id="adduserForm">
+                                        @csrf
+                                        <div class="mb-3">
+                                            <label for="nombre" class="form-label">Nombre</label>
+                                            <input type="text" class="form-control" id="nombre" name="name"
+                                                required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="apellidos" class="form-label">Apellidos</label>
+                                            <input type="text" class="form-control" id="apellidos" name="surname"
+                                                required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="email" class="form-label">Email</label>
+                                            <input type="email" class="form-control" id="emailAdd" name="email"
+                                                required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="contrasenia" class="form-label">Contraseña</label>
+                                            <input type="password" class="form-control" id="contrasenia"
+                                                name="password" data-toggle="tooltip" title="La contraseña es muy débil" data-placement="right" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="sex" class="form-label">Sexo</label>
+                                            <select class="form-select" id="sexAdd" name="sex"
+                                                required>
+                                                <option value="Male">Male</option>
+                                                <option value="Female">Female</option>
+                                                <option value="Other">Other</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="identificacion" class="form-label">Identificación</label>
+                                            <select class="form-select" id="identificacion" name="identification"
+                                                required>
+                                                <option value="DNI">DNI</option>
+                                                <option value="NIE">NIE</option>
+                                                <option value="PASSPORT">PASSPORT</option>
+                                            </select>
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <label for="dni" class="form-label">Numero de identificacion</label>
+                                            <input type="text" class="form-control" id="dniAdd" name="dni"
+                                                required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="pais" class="form-label">País</label>
+                                            <select class="form-select" id="pais" name="country" required>
+
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="telefono" class="form-label">Teléfono</label>
+                                            <input type="tel" class="form-control" id="telefono" name="phone"
+                                                required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="rol" class="form-label">Rol</label>
+                                            <select class="form-select" id="rolAdd" name="rol" required>
+                                                <option value="ENCARGADO">ENCARGADO</option>
+                                                <option value="TRABAJADOR">TRABAJADOR</option>
+                                            </select>
+                                        </div>
+                                        {{-- <button type="submit" class="btn btn-primary">Enviar</button> --}}
+                                    </form>
+                                    <br>
+                                    <p id="errorMessage" style="display: none; color:red;text-align: center;">Algunos de los
+                                        campos anteriores no son validos, por favor reviselos.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" id="submitadduser">Guardar cambios</button>
                     </div>
                 </div>
             </div>

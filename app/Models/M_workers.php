@@ -67,16 +67,39 @@ class M_workers extends Model
     {
         $vacaciones = DB::table('vacaciones')
             ->where('dni', $dni)
+            ->where('activo', 0)
             ->get();
 
         return $vacaciones;
     }
 
-    public function setHolidays($inicio,$fin){
-        $resultado = DB::table('nombre_de_la_tabla')->insert([
+    public function setHolidays($inicio, $fin, $dni)
+    {
+        $fechaActual = date("Y-m-d");
+        $resultado = DB::table('vacaciones')->insert([
             'fecha_inicio' => $inicio,
             'fecha_fin' => $fin,
+            'dni' => $dni,
+            'created_at' => $fechaActual,
+            'activo' => 0
         ]);
         return $resultado;
+    }
+
+    public function deleteHolidays($dni, $id_fila)
+    {
+        $affected = DB::table('vacaciones')
+            ->where('dni', $dni)
+            ->where('id', $id_fila)
+            ->update(['activo' => 1]);
+
+        // $queryLog = DB::getQueryLog();
+        // $ultimaQuery = end($queryLog);
+        // var_dump($ultimaQuery);
+        return $affected > 0;
+    }
+
+    public function addTrabajador($data){
+        return DB::table('users')->insert($data);
     }
 }

@@ -20,7 +20,7 @@
     <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
     <title>Dashboard</title>
     <style>
-        .dash-icon-hover:hover {
+        .dash-icon-hover>div>svg:hover {
             opacity: 0.8;
             cursor: pointer;
         }
@@ -28,6 +28,11 @@
         .dash-icon-hover>div>svg {
             width: 100px;
             height: 100px;
+        }
+
+        .dash-icon-hover>div.small>svg {
+            width: 50px;
+            height: 50px;
         }
 
         /* .dash-icon-hover{
@@ -86,6 +91,49 @@
             background-color: blue;
             color: white;
         }
+
+        .eliminardias>.col-4 {
+            background-color: lightcoral;
+
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .eliminardias>.col-4.ho {
+            background-color: aquamarine;
+
+            text-align: center;
+
+        }
+
+        .eliminardias>.col-4:hover {
+            background-color: rgba(128, 128, 128, 0.514);
+            transition: 0.3s;
+        }
+
+        .eliminardias>.col-4.ho:hover {
+            background-color: grey;
+            transition: 0.3s;
+        }
+
+        .eliminardias>.col-4:active {
+            background-color: aquamarine;
+        }
+
+        input.parsley-error,
+        select.parsley-error,
+        textarea.parsley-error {
+            border-color: #843534;
+            box-shadow: none;
+        }
+
+
+        input.parsley-error:focus,
+        select.parsley-error:focus,
+        textarea.parsley-error:focus {
+            border-color: #843534;
+            box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #ce8483
+        }
     </style>
     @bukStyles(true)
 </head>
@@ -133,6 +181,10 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js'></script>
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/libphonenumber-js/1.9.19/libphonenumber-js.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/zxcvbn/4.4.2/zxcvbn.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/validator/13.6.0/validator.min.js"></script>
+    
     <script src="{{ asset('js/scripts.js') }}"></script>
     @bukScripts(true)
 </body>

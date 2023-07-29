@@ -43,7 +43,7 @@ function vaciarYRellenarTabla(titulo, texto, icono) {
         dataType: 'json',
         success: function (data) {
             // Vaciar la tabla
-            console.log(data);
+            //console.log(data);
             $('#tabla').DataTable().clear();
             data.forEach(element => {
                 var disableButtons = element.activo === 1;
@@ -108,6 +108,7 @@ function diaSiguiente(fecha) {
     return fechaActualizadaString;
 }
 
+
 $(document).ready(function () {
     //variables globales
     var token = $('meta[name="csrf-token"]').attr('content');
@@ -140,6 +141,7 @@ $(document).ready(function () {
 
     $('#tabla').on('click', '.calendarmodal', function (e) {
         e.preventDefault();
+        calendar.removeAllEvents();
         calendarButtons = $(this).parent().parent().hasClass("fila-roja");
         dni = $(this).parent().siblings().eq(0).text();
         if (calendarButtons) {
@@ -158,7 +160,7 @@ $(document).ready(function () {
             data: formData,
             dataType: "json",
             success: function (response) {
-                console.log(response);
+                //console.log(response);
                 response.forEach(element => {
                     calendar.addEvent({
                         title: 'Día de vacaciones',
@@ -470,7 +472,7 @@ $(document).ready(function () {
             error: function (xhr, status, error) {
                 // Manejar el error
 
-                console.log(xhr.responseText);
+                //console.log(xhr.responseText);
                 ocultarPreloader();
             }
         });
@@ -532,7 +534,7 @@ $(document).ready(function () {
                     error: function (xhr, status, error) {
                         // Manejar el error
                         ocultarPreloader();
-                        console.log(xhr.responseText);
+                        //console.log(xhr.responseText);
                         Swal.fire({
                             title: 'Error',
                             text: "Something didn´t work, contact support",
@@ -555,8 +557,9 @@ $(document).ready(function () {
             for (let index = 0; index < data.countries.length; index++) {
                 const element = data.countries[index];
 
-                $('#country').append('<option value="' + element.es_name + '">' + element.es_name +
+                $('#country , #pais').append('<option value="' + element.es_name + '">' + element.es_name +
                     '</option>');
+
             }
         });
     $('#submit').click(function (e) {
@@ -568,7 +571,7 @@ $(document).ready(function () {
             var field = $(this);
 
             if (field.val() == '' || field.val() == null) {
-                console.log(field);
+                //console.log(field);
                 isFormValid = false;
                 field.addClass(
                     'is-invalid'); // Agregar clase 'is-invalid' para resaltar campos vacíos
@@ -592,7 +595,7 @@ $(document).ready(function () {
                 success: function (response) {
 
                     $('#editarModal').modal('toggle');
-                    console.log(response);
+                    //console.log(response);
                     if (response) {
                         vaciarYRellenarTabla("Updated!", "Worker update correctly.", "success");
                     } else {
@@ -607,7 +610,7 @@ $(document).ready(function () {
                 error: function (xhr, status, error) {
                     // Manejar el error
 
-                    console.log(xhr.responseText);
+                    //console.log(xhr.responseText);
                     ocultarPreloader();
                 }
             });
@@ -617,9 +620,10 @@ $(document).ready(function () {
 
     $('#fechaInicio').on('change', function () {
         $("#fechaFin").datepicker("destroy");
+        $('#fechaFin').val("");
         $('#fechaFin').show();
         fechaActualStringFin = diaSiguiente($('#fechaInicio').val());
-        console.log(fechaActualStringFin);
+
         $("#fechaFin").datepicker({
             dateFormat: "yy-mm-dd",
             minDate: fechaActualStringFin
@@ -639,32 +643,251 @@ $(document).ready(function () {
 
         mostrarPreloader();
         if (inicio != '' && fin != '') {
+
             $.ajax({
                 type: "post",
                 url: "/añadir/calendario/vacaciones",
                 data: formData,
-                dataType: "json",
+                dataType: "text",
                 success: function (response) {
+                    //console.log(response);
+                    if (response == '-1') {
+                        ocultarPreloader();
+                        basicAlert('Atención', 'Hay 1 o más dias que coinciden con dias ya seleccionados anteriormente, compruebelos antes de volver a elegir los dias que desee, muchas gracias.', 'warning');
+                    } else {
+                        calendar.removeAllEvents();
+                        $.ajax({
+                            type: "post",
+                            url: "/editar/calendario/vacaciones",
+                            data: formData,
+                            dataType: "json",
+                            success: function (response) {
+                                //console.log('dias de vacaciones: ', response);
+                                response.forEach(element => {
+                                    calendar.addEvent({
+                                        title: 'Día de vacaciones',
+                                        start: element.fecha_inicio,
+                                        end: element.fecha_fin,
+                                        color: 'red'
+                                    });
+                                });
+                                $("#añadirFecha").modal("toggle");
+                                $("#calendarModal").modal("toggle");
+                                $('#calendarModal').on('shown.bs.modal', function () {
+
+                                    calendar.render();
+                                });
+                                ocultarPreloader();
+                            }
+                        });
+                    }
+
 
                 }
             });
-        }else{
+        } else {
             ocultarPreloader();
             basicAlert('Atención', 'Ambos campos deben estar rellenos con una fecha, comprueba que este todo correcto por favor', 'warning')
         }
 
     });
-    $('#cerrarVacaciones').on('click', function () {
+    $('.cerrarVacaciones').on('click', function () {
         $("#fechaFin").datepicker("destroy");
         $("#fechaInicio").datepicker("destroy");
         $('#fechaFin').hide();
+
+        $("#calendarModal").modal("toggle");
+        //calendar.removeAllEvents();
+    });
+
+    $('#btnAgregarEvento').on('click', function () {
         $('#fechaInicio').val("");
         $('#fechaFin').val("");
-    });
-    $('#btnAgregarEvento').on('click', function () {
         $("#fechaInicio").datepicker({
             dateFormat: "yy-mm-dd",
             minDate: fechaActualString
         });
+    });
+    $('#btnEliminarEvento').on('click', function () {
+        $('.eliminardias').empty();
+        var formData = {
+            _token: $('meta[name="csrf-token"]').attr('content'),
+            dni: dni
+        };
+        $('#calendarModal').modal('toggle');
+        mostrarPreloader();
+        $.ajax({
+            type: "post",
+            url: "/editar/calendario/vacaciones",
+            data: formData,
+            dataType: "json",
+            success: function (response) {
+                response.forEach(element => {
+                    console.log(element);
+                    $('.eliminardias').append('<div class="col-4 ho"><h3>vacaciones</h3><p>' + element.fecha_inicio + '</p><p>' + element.fecha_fin + '</p><input type="hidden" name="id" value="' + element.id + '"></div>');
+                });
+                ocultarPreloader();
+
+                $('#eliminarFecha').modal('toggle');
+            }
+        });
+    });
+
+    $('#submitEliminarVacaciones').on('click', function () {
+        var arrayDiasEliminados = [];
+        var diaS = $('.eliminardias').children();
+        for (let i = 0; i < diaS.length; i++) {
+            const element = diaS.eq(i);
+            if (!$(element).hasClass('ho')) {
+                arrayDiasEliminados.push(element.find('input').val());
+            }
+        }
+        if (arrayDiasEliminados.length == 0) {
+            basicAlert("Atención", "No ha seleccionado ningun dia por favor seleccione al menos una fecha", "warning");
+        } else {
+            Swal.fire({
+                title: "¡Atención!",
+                html: "¿Estas seguro de los dias seleccionados?",
+                icon: "warning",
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                showCancelButton: true,
+                confirmButtonText: 'Confirmar',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    mostrarPreloader();
+                    var formData = {
+                        _token: $('meta[name="csrf-token"]').attr('content'),
+                        dni: dni,
+                        dias: arrayDiasEliminados
+                    };
+                    $.ajax({
+                        type: "post",
+                        url: "/delete/calendario/vacaciones",
+                        data: formData,
+                        dataType: "json",
+                        success: function (response) {
+                            console.log(response.success);
+                            ocultarPreloader();
+                            if (response.success == 0) {
+                                basicAlert('Correcto', 'Dias eliminados con exito!', 'success');
+                                Swal.fire({
+                                    title: "Correcto",
+                                    html: "Dias eliminados con exito!",
+                                    icon: "success",
+                                    allowOutsideClick: false,
+                                    allowEscapeKey: false,
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Volver al calendario',
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        mostrarPreloader();
+                                        calendar.removeAllEvents();
+                                        $.ajax({
+                                            type: "post",
+                                            url: "/editar/calendario/vacaciones",
+                                            data: formData,
+                                            dataType: "json",
+                                            success: function (response) {
+                                                response.forEach(element => {
+                                                    calendar.addEvent({
+                                                        title: 'Día de vacaciones',
+                                                        start: element.fecha_inicio,
+                                                        end: element.fecha_fin,
+                                                        color: 'red'
+                                                    });
+                                                });
+                                                $("#eliminarFecha").modal("toggle");
+                                                $("#calendarModal").modal("toggle");
+                                                $('#calendarModal').on('shown.bs.modal', function () {
+
+                                                    calendar.render();
+                                                });
+                                                ocultarPreloader();
+                                            }
+                                        });
+                                    }
+                                });
+                            } else {
+                                //mensaje de error y lo mandamos de vuelta al calendario
+                                basicAlert('Error', 'Ha ocurrido un error en la transaccion de datos, por favor contacte con el equipo, muchas gracias.', 'error');
+                                $("#eliminarFecha").modal("toggle");
+                                $("#calendarModal").modal("toggle");
+                            }
+                        }
+                    });
+                }
+            });
+        }
+
+    });
+    $(document).on('click', '.eliminardias>.col-4', function () {
+        if ($(this).hasClass('ho')) {
+            $(this).removeClass('ho');
+        } else {
+            $(this).addClass('ho');
+        }
+    });
+
+    $('.adduser').on('click', function () {
+        $("#adduser").modal("toggle");
+    });
+    $('.cerrarUser').on('click', function () {
+        $("#adduser").modal("toggle");
+    });
+    $('#submitadduser').on('click', function () {
+        var formulario = $("#adduserForm");
+
+        var datos = formulario.serialize();
+        var fields = formulario.find('input[type="text"], input[type="password"],input[type="tel"],input[type="email"]');
+        var isFormValid = true;
+        fields.each(function () {
+            let field = $(this);
+
+            if (field.val() == '' || field.val() == null) {
+                //console.log(field);
+                isFormValid = false;
+                field.addClass('is-invalid'); // Agregar clase 'is-invalid' para resaltar campos vacíos
+
+            } else {
+
+                field.removeClass(
+                    'is-invalid'); // Eliminar clase 'is-invalid' si el campo no está vacío
+
+            }
+
+        });
+        if (!validator.isEmail($('#emailAdd').val())) {
+            isFormValid = false;
+            $('#emailAdd').addClass('is-invalid');
+        }
+        let result = zxcvbn($('#contrasenia').val());
+
+        if (result.score < 3) {
+            isFormValid = false;
+            $('#contrasenia').addClass('is-invalid');
+            $('#contrasenia').tooltip('show');
+        }
+
+        if (isFormValid) {
+            $('#errorMessageAdd').hide();
+            mostrarPreloader();
+            // $.ajax({
+            //     type: "post",
+            //     url: "/add/trabajador",
+            //     data: datos,
+            //     dataType: "text",
+            //     success: function (response) {
+            //         console.log(response);
+            //     },
+            //     error: function (error) {
+            //         // Manejo de errores
+            //         console.log(error);
+            //     }
+            // });
+        } else {
+            $('#errorMessageAdd').show();
+        }
+
     });
 });

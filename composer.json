@@ -6,7 +6,9 @@
     "license": "MIT",
     "require": {
         "php": "^7.3|^8.0",
+        "andreiio/blade-remix-icon": "^2.4",
         "blade-ui-kit/blade-ui-kit": "^0.3.4",
+        "brunocfalcao/blade-feather-icons": "^3.0",
         "codeat3/blade-akar-icons": "^1.22",
         "codeat3/blade-carbon-icons": "^2.12",
         "codeat3/blade-mono-icons": "^1.3",
