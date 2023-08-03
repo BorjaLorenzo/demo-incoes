@@ -8,11 +8,17 @@
             </div>
         </div>
         <div class="row mt-4 dash-icon-hover justify-content-center">
-            <div class="col-1 d-flex justify-content-center adduser small">
+            <div class="col-1 d-flex justify-content-center adduser small" data-bs-toggle="tooltip" data-bs-placement="top" title="Añadir un nuevo trabajador">
                 {{ svg('ri-user-add-line') }}
             </div>
-            <div class="col-1 d-flex justify-content-center pdf small">
-                {{ svg('feathericon-download') }}
+            <div class="col-1 d-flex justify-content-center pdf small" data-bs-toggle="tooltip" data-bs-placement="top" title="Descargar un excel del listado">
+                {{ svg('fileicon-microsoft-excel') }}
+            </div>
+            <div class="col-1 d-flex justify-content-center pdf small" data-bs-toggle="tooltip" data-bs-placement="top" title="Enviar el listado a mi correo electronico">
+                {{ svg('iconoir-mail-in') }}
+            </div>
+            <div class="col-1 d-flex justify-content-center pdf small" data-bs-toggle="tooltip" data-bs-placement="top" title="Enviar el listado a otra persona">
+                {{ svg('iconoir-mail-out') }}
             </div>
         </div>
         <div class="table-responsive">

@@ -920,4 +920,12 @@ $(document).ready(function () {
         }
 
     });
+    $(".dash-icon-hover>div").hover(function () {
+            // over
+            $(this).tooltip('show');
+        }, function () {
+            // out
+            $(this).tooltip('hide');
+        }
+    );
 });
