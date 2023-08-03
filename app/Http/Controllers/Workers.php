@@ -20,6 +20,9 @@ class Workers extends Controller
         $this->workers = new M_workers();
     }
 
+    public function dashboard(){
+        return view("dashboard");
+    }
     public function mainView()
     {
         Auth::user()->rol = 'new';
@@ -211,7 +214,11 @@ class Workers extends Controller
         ];
 
         $retorno= $this->workers->addTrabajador($userData);
-        var_dump($retorno);
+        if (!$retorno) {
+            echo "false";
+        }else{
+            echo "true";
+        }
         
     }
     public function checkDNI(Request $request){

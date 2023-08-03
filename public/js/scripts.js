@@ -13,7 +13,7 @@ function mostrarPreloader() {
     });
 }
 
-function basicAlert(titulo, comentario = '', tipo = 'succes') {
+function basicAlert(titulo="Hola mundo", comentario = 'Que tal?', tipo = 'succes') {
     Swal.fire({
         title: titulo,
         html: comentario,
@@ -831,11 +831,13 @@ $(document).ready(function () {
 
     $('.adduser').on('click', function () {
         $("#adduser").modal("toggle");
+        $("#adduserForm").find("input.form-control").val("");
     });
     $('.cerrarUser').on('click', function () {
         $("#adduser").modal("toggle");
     });
     $('#submitadduser').on('click', function () {
+
         var formulario = $("#adduserForm");
 
         var datos = formulario.serialize();
@@ -877,6 +879,7 @@ $(document).ready(function () {
                 dni: $("#dniAdd").val(),
                 identificacion: $("#identificacion").val()
             };
+            mostrarPreloader();
             $.ajax({
                 type: "post",
                 url: "/check/dni",
@@ -884,28 +887,34 @@ $(document).ready(function () {
                 dataType: "text",
                 success: function (response) {
                     console.log(response);
-                    if (response=="true") {
+                    if (response == "true") {
                         ocultarPreloader();
-                        basicAlert("Nº de DNI duplicado","El número del DNI esta duplicado para este trabajador que instentas introducir, comprueba que primero lo has dado de baja por favor. Si el problema persiste contacte con el servicio técnico, muchas gracias.","error");
+                        basicAlert("Nº de DNI duplicado", "El número del DNI esta duplicado para este trabajador que instentas introducir, comprueba que primero lo has dado de baja por favor. Si el problema persiste contacte con el servicio técnico, muchas gracias.", "error");
                     } else {
-                        basicAlert("funciona","funciona","success");
+                        
+                        $.ajax({
+                            type: "post",
+                            url: "/add/trabajador",
+                            data: datos,
+                            dataType: "text",
+                            success: function (response) {
+                                ocultarPreloader();
+                                console.log(response);
+                                $("#adduser").modal("toggle");
+                                vaciarYRellenarTabla("Completado","!Se ha dado de alta al usuario!", "success");
+                            },
+                            error: function (error) {
+                                // Manejo de errores
+                                ocultarPreloader();
+                                console.log(error);
+                                basicAlert("Email duplicado", "El email introducido es erroneo o esta duplicado en algún usuario activo, por favor comprueba que los datos son correctos. Si el problema persiste contacte con el servicio técnico, muchas gracias.", "error");
+
+                            }
+                        });
                     }
                 }
             });
-            mostrarPreloader();
-            // $.ajax({
-            //     type: "post",
-            //     url: "/add/trabajador",
-            //     data: datos,
-            //     dataType: "text",
-            //     success: function (response) {
-            //         console.log(response);
-            //     },
-            //     error: function (error) {
-            //         // Manejo de errores
-            //         console.log(error);
-            //     }
-            // });
+
         } else {
             $('#errorMessageAdd').show();
         }
