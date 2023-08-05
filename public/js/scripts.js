@@ -13,7 +13,7 @@ function mostrarPreloader() {
     });
 }
 
-function basicAlert(titulo="Hola mundo", comentario = 'Que tal?', tipo = 'succes') {
+function basicAlert(titulo = "Hola mundo", comentario = 'Que tal?', tipo = 'succes') {
     Swal.fire({
         title: titulo,
         html: comentario,
@@ -891,7 +891,7 @@ $(document).ready(function () {
                         ocultarPreloader();
                         basicAlert("Nº de DNI duplicado", "El número del DNI esta duplicado para este trabajador que instentas introducir, comprueba que primero lo has dado de baja por favor. Si el problema persiste contacte con el servicio técnico, muchas gracias.", "error");
                     } else {
-                        
+
                         $.ajax({
                             type: "post",
                             url: "/add/trabajador",
@@ -901,7 +901,7 @@ $(document).ready(function () {
                                 ocultarPreloader();
                                 console.log(response);
                                 $("#adduser").modal("toggle");
-                                vaciarYRellenarTabla("Completado","!Se ha dado de alta al usuario!", "success");
+                                vaciarYRellenarTabla("Completado", "!Se ha dado de alta al usuario!", "success");
                             },
                             error: function (error) {
                                 // Manejo de errores
@@ -921,11 +921,59 @@ $(document).ready(function () {
 
     });
     $(".dash-icon-hover>div").hover(function () {
-            // over
-            $(this).tooltip('show');
-        }, function () {
-            // out
-            $(this).tooltip('hide');
-        }
+        // over
+        $(this).tooltip('show');
+    }, function () {
+        // out
+        $(this).tooltip('hide');
+    }
     );
+    $('#excelTrabajadores').click(function (e) {
+        e.preventDefault();
+        mostrarPreloader();
+        $.ajax({
+            url: '/get/excel/trabajadores',
+            type: 'GET',
+            xhrFields: {
+                responseType: 'blob' // Establece el tipo de respuesta esperado como Blob
+            },
+            success: function (blob) {
+
+                // Crea un enlace temporal para descargar el archivo
+                const url = window.URL.createObjectURL(new Blob([blob]));
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download', 'archivo_personalizado.xlsx');
+                document.body.appendChild(link);
+                link.click();
+                // Elimina la URL del Blob para liberar recursos
+                window.URL.revokeObjectURL(url);
+                ocultarPreloader();
+            },
+            error: function (error) {
+                ocultarPreloader();
+                basicAlert("Error!", "Ha ocurrido un error con la descarga del archivo, por favor recarga la pagina. Si no funciona contacte con el equipo técnico", "error");
+                console.log('Error en la descarga del archivo:', error);
+            }
+        });
+    });
+    $('#recibirEmail').click(function (e) {
+        e.preventDefault();
+        mostrarPreloader();
+        $.ajax({
+            url: '/send/pdf/trabajadores',
+            type: 'GET',
+            datatype: 'json',
+            success: function (response) {
+                console.log(response);
+                ocultarPreloader();
+            },
+            error: function (error) {
+                ocultarPreloader();
+                basicAlert("Error!","Ha ocurrido un error con la descarga del archivo, por favor recarga la pagina. Si no funciona contacte con el equipo técnico","error");
+                console.log('Error en el envio del email:', error);
+            }
+        });
+
+    });
 });

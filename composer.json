@@ -8,6 +8,7 @@
         "php": "^7.3|^8.0",
         "andreiio/blade-iconoir": "^2.10",
         "andreiio/blade-remix-icon": "^2.4",
+        "barryvdh/laravel-dompdf": "^2.0",
         "blade-ui-kit/blade-ui-kit": "^0.3.4",
         "brunocfalcao/blade-feather-icons": "^3.0",
         "codeat3/blade-akar-icons": "^1.22",
@@ -21,7 +22,9 @@
         "laravel/framework": "^8.75",
         "laravel/sanctum": "^2.11",
         "laravel/tinker": "^2.5",
+        "maatwebsite/excel": "^3.1",
         "owenvoke/blade-fontawesome": "^1.10",
+        "phpoffice/phpspreadsheet": "^1.29",
         "ryangjchandler/blade-tabler-icons": "^1.2",
         "troccoli/blade-health-icons": "^1.0"
     },

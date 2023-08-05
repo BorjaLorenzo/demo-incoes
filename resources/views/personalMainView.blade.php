@@ -11,10 +11,10 @@
             <div class="col-1 d-flex justify-content-center adduser small" data-bs-toggle="tooltip" data-bs-placement="top" title="Añadir un nuevo trabajador">
                 {{ svg('ri-user-add-line') }}
             </div>
-            <div class="col-1 d-flex justify-content-center pdf small" data-bs-toggle="tooltip" data-bs-placement="top" title="Descargar un excel del listado">
+            <div class="col-1 d-flex justify-content-center pdf small" data-bs-toggle="tooltip" data-bs-placement="top" title="Descargar un excel del listado" id="excelTrabajadores">
                 {{ svg('fileicon-microsoft-excel') }}
             </div>
-            <div class="col-1 d-flex justify-content-center pdf small" data-bs-toggle="tooltip" data-bs-placement="top" title="Enviar el listado a mi correo electronico">
+            <div class="col-1 d-flex justify-content-center pdf small" data-bs-toggle="tooltip" data-bs-placement="top" title="Enviar el listado a mi correo electronico" id="recibirEmail">
                 {{ svg('iconoir-mail-in') }}
             </div>
             <div class="col-1 d-flex justify-content-center pdf small" data-bs-toggle="tooltip" data-bs-placement="top" title="Enviar el listado a otra persona">

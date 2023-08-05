@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\DB;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class M_workers extends Model
 {
@@ -111,5 +112,19 @@ class M_workers extends Model
         // var_dump($dni,$identificacion);
         $count = $query->count();
         return $count > 0;
+    }
+    public function getWorkersAllByClientForExcel($clientCompanyID)
+    {
+        if (Auth::user()->rol=="root") {
+            $workers = DB::table('users')
+            ->select('*')
+            ->get();
+        } else {
+            $workers = DB::table('users')
+            ->select('dni', 'name', 'surname','email', 'phone', 'rol', 'activo','created_at','identification','country')
+            ->where('company', $clientCompanyID)
+            ->get();
+        }
+        return $workers;
     }
 }

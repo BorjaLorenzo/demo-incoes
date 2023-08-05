@@ -8,7 +8,11 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use DateTime;
 use Illuminate\Validation\Rules;
-use Illuminate\Support\Facades\Hash;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PDF;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\PDFEmail;
 
 class Workers extends Controller
 {
@@ -20,7 +24,8 @@ class Workers extends Controller
         $this->workers = new M_workers();
     }
 
-    public function dashboard(){
+    public function dashboard()
+    {
         return view("dashboard");
     }
     public function mainView()
@@ -183,19 +188,19 @@ class Workers extends Controller
 
     public function addTrabajador(Request $request)
     {
-       
-        $validator = Validator::make($request->all(), [//aqui poner la validacion de lo que devuelve el formulario para saber si los campos estan bien con respecto a si son int, string, email, etc
+
+        $validator = Validator::make($request->all(), [ //aqui poner la validacion de lo que devuelve el formulario para saber si los campos estan bien con respecto a si son int, string, email, etc
 
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'surname'=> ['required', 'string', 'max:255'],
-            'identification'=> ['required', 'string', 'max:255'],
-            'dni'=> ['required', 'string', 'max:255'],
-            'country'=> ['required', 'string', 'max:255'],
-            'phone'=> ['required', 'string', 'max:255'],
-            'rol'=> ['required', 'string', 'max:255'],
-            'sex'=> ['required', 'string', 'max:255'],
+            'surname' => ['required', 'string', 'max:255'],
+            'identification' => ['required', 'string', 'max:255'],
+            'dni' => ['required', 'string', 'max:255'],
+            'country' => ['required', 'string', 'max:255'],
+            'phone' => ['required', 'string', 'max:255'],
+            'rol' => ['required', 'string', 'max:255'],
+            'sex' => ['required', 'string', 'max:255'],
         ]);
 
         $userData = [
@@ -208,27 +213,107 @@ class Workers extends Controller
             'country' => $request->input('country'),
             'phone' => $request->input('phone'),
             'rol' => $request->input('rol'),
-            'activo'=>'0',
-            'company'=>Auth::user()->company,
-            'sex'=>$request->input('sex'),
+            'activo' => '0',
+            'company' => Auth::user()->company,
+            'sex' => $request->input('sex'),
         ];
 
-        $retorno= $this->workers->addTrabajador($userData);
+        $retorno = $this->workers->addTrabajador($userData);
         if (!$retorno) {
             echo "false";
-        }else{
+        } else {
             echo "true";
         }
-        
     }
-    public function checkDNI(Request $request){
+    public function checkDNI(Request $request)
+    {
         $validator = Validator::make($request->all(), [
-            'dni'=> ['required', 'string', 'max:255'],
-            'identification'=> ['required', 'string', 'max:255'],
+            'dni' => ['required', 'string', 'max:255'],
+            'identification' => ['required', 'string', 'max:255'],
         ]);
 
 
-        $retorno=$this->workers->checkDNI($request->input('dni'),$request->input('identificacion'));
+        $retorno = $this->workers->checkDNI($request->input('dni'), $request->input('identificacion'));
         echo $retorno ? 'true' : 'false';
+    }
+    public function getExcelTrabajadores()
+    {
+        // Crea un nuevo objeto Spreadsheet
+        $spreadsheet = new Spreadsheet();
+
+        // Obtiene la hoja activa del Spreadsheet
+        $hoja = $spreadsheet->getActiveSheet();
+
+        // Define los encabezados
+        $hoja->setCellValue('A1', 'Nombre');
+        $hoja->setCellValue('B1', 'Apellidos');
+        $hoja->setCellValue('C1', 'Teléfono');
+        $hoja->setCellValue('D1', 'DNI');
+        $hoja->setCellValue('E1', 'Identificacion');
+        $hoja->setCellValue('F1', 'Email');
+        $hoja->setCellValue('G1', 'Cargo');
+        $hoja->setCellValue('H1', 'Alta');
+        $hoja->setCellValue('I1', 'Pais');
+        $hoja->setCellValue('J1', 'Baja');
+
+        $retorno = $this->workers->getWorkersAllByClientForExcel(Auth::user()->company);
+
+        // Obtiene los datos que deseas exportar (suponiendo que tienes un array llamado $datos)
+        $datos = [
+            ['Juan', 'Pérez', '123456789', '12345678A'],
+            ['María', 'López', '987654321', '87654321B'],
+            // Agrega aquí los datos que desees exportar
+        ];
+        // Agrega los datos a la hoja de cálculo
+        $row = 2;
+        foreach ($retorno as $dato) {
+            $hoja->setCellValue('A' . $row, $dato->name);
+            $hoja->setCellValue('B' . $row, $dato->surname);
+            $hoja->setCellValue('C' . $row, $dato->phone);
+            $hoja->setCellValue('D' . $row, $dato->dni);
+            $hoja->setCellValue('E' . $row, $dato->identification);
+            $hoja->setCellValue('F' . $row, $dato->email);
+            $hoja->setCellValue('G' . $row, $dato->rol);
+            $hoja->setCellValue('H' . $row, $dato->created_at);
+            $hoja->setCellValue('I' . $row, $dato->country);
+            $hoja->setCellValue('J' . $row, $dato->activo);
+            $row++;
+        }
+
+        // Crea un objeto Writer para guardar el archivo en formato xlsx
+        $writer = new Xlsx($spreadsheet);
+
+        // Nombre del archivo que deseas darle
+        $nombreArchivo = 'archivo_personalizado.xlsx';
+
+        // Configura las cabeceras para descargar el archivo
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="' . $nombreArchivo . '"');
+        header('Cache-Control: max-age=0');
+
+        // Guarda el archivo en la respuesta del controlador
+        $writer->save('php://output');
+    }
+
+    public function generarPDFListaPersonal()
+    {
+        set_time_limit(120);
+        $personas = $this->workers->getWorkersAllByClientForExcel(Auth::user()->company)->toArray();
+        $data = ['personas' => $personas];
+
+        $pdf = PDF::loadView('pdf.tabla_pdf', $data);
+        $pdf->set_option('dpi', 256);
+        // Guardar el PDF en el directorio de almacenamiento temporal
+        $tempPdfPath = sys_get_temp_dir() . '/lista_personas.pdf';
+        $pdf->save($tempPdfPath);
+
+
+        // Enviar el correo con el PDF adjunto
+        $test=Mail::to(Auth::user()->email)->send(new PDFEmail($tempPdfPath));
+
+        // Eliminar el archivo temporal
+        unlink($tempPdfPath);
+        
+        return response()->json(['message' => 'Correo con PDF adjunto enviado correctamente.']);
     }
 }

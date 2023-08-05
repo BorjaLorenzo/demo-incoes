@@ -81,7 +81,13 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/add/trabajador', [Workers::class, 'addTrabajador'])
         ->name('addTrabajador');
-        
+
     Route::post('/check/dni', [Workers::class, 'checkDNI'])
         ->name('checkDNI');
+
+    Route::get('/get/excel/trabajadores', [Workers::class, 'getExcelTrabajadores'])
+        ->name('getExcelTrabajadores');
+        
+    Route::get('/send/pdf/trabajadores', [Workers::class, 'generarPDFListaPersonal'])
+        ->name('generarPDFListaPersonal');
 });
