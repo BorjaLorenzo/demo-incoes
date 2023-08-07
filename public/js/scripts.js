@@ -957,7 +957,7 @@ $(document).ready(function () {
             }
         });
     });
-    $('#recibirEmail').click(function (e) {
+    $('#recibirEmailTrabajador').click(function (e) {
         e.preventDefault();
         mostrarPreloader();
         $.ajax({
@@ -966,14 +966,56 @@ $(document).ready(function () {
             datatype: 'json',
             success: function (response) {
                 console.log(response);
-                ocultarPreloader();
+                //ocultarPreloader();
+                Swal.fire({
+                    title: "Lista enviada con exito!",
+                    icon: "success"
+                })
             },
             error: function (error) {
                 ocultarPreloader();
-                basicAlert("Error!","Ha ocurrido un error con la descarga del archivo, por favor recarga la pagina. Si no funciona contacte con el equipo técnico","error");
+                basicAlert("Error!", "Ha ocurrido un error con la descarga del archivo, por favor recarga la pagina. Si no funciona contacte con el equipo técnico", "error");
                 console.log('Error en el envio del email:', error);
             }
         });
 
+    });
+    $("#enviarEmailTrabajador").click(function (e) {
+        e.preventDefault();
+        Swal.fire({
+            title: 'Enviar a:',
+            input: 'text',
+            inputAttributes: {
+                autocapitalize: 'off'
+            },
+            inputPlaceholder:"Email",
+            showCancelButton: true,
+            confirmButtonText: 'Enviar',
+            showLoaderOnConfirm: true,
+            preConfirm: (login) => {
+                console.log(login);
+                var formData = {
+                    email: login,
+                };
+                mostrarPreloader();
+                $.ajax({
+                    type: "get",
+                    url: "/send/pdf/trabajadores",
+                    data: formData,
+                    dataType: "text",
+                    success: function (response) {
+                        Swal.fire({
+                            title: "Lista enviada con exito!",
+                            icon: "success"
+                        })
+                    }
+                });
+            },
+            allowOutsideClick: () => !Swal.isLoading()
+        }).then((result) => {
+            if (result.isConfirmed) {
+                
+            }
+        })
     });
 });

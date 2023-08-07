@@ -26,7 +26,8 @@ class Workers extends Controller
 
     public function dashboard()
     {
-        return view("dashboard");
+        //Auth::user()->rol = 'new';
+        return view("dashboard",['rol'=>Auth::user()->rol]);
     }
     public function mainView()
     {
@@ -58,7 +59,7 @@ class Workers extends Controller
 
     public function RefrescarDatatableWorkers()
     {
-        Auth::user()->rol = 'new';
+        //Auth::user()->rol = 'new';
 
         if (Auth::user()->rol == "root") {
             $workers = $this->workers->getWorkersAll();
@@ -203,6 +204,10 @@ class Workers extends Controller
             'sex' => ['required', 'string', 'max:255'],
         ]);
 
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 400);
+        }
+
         $userData = [
             'name' => $request->input('name'),
             'email' => $request->input('email'),
@@ -217,6 +222,7 @@ class Workers extends Controller
             'company' => Auth::user()->company,
             'sex' => $request->input('sex'),
         ];
+        
 
         $retorno = $this->workers->addTrabajador($userData);
         if (!$retorno) {
@@ -232,6 +238,9 @@ class Workers extends Controller
             'identification' => ['required', 'string', 'max:255'],
         ]);
 
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 400);
+        }
 
         $retorno = $this->workers->checkDNI($request->input('dni'), $request->input('identificacion'));
         echo $retorno ? 'true' : 'false';
@@ -295,7 +304,7 @@ class Workers extends Controller
         $writer->save('php://output');
     }
 
-    public function generarPDFListaPersonal()
+    public function generarPDFListaPersonal(Request $request)
     {
         set_time_limit(120);
         $personas = $this->workers->getWorkersAllByClientForExcel(Auth::user()->company)->toArray();
@@ -309,11 +318,19 @@ class Workers extends Controller
 
 
         // Enviar el correo con el PDF adjunto
-        $test=Mail::to(Auth::user()->email)->send(new PDFEmail($tempPdfPath));
+        if ($request->input('email')==null) {
+            Mail::to(Auth::user()->email)->send(new PDFEmail($tempPdfPath));
 
+        } else {
+            Mail::to($request->input('email'))->send(new PDFEmail($tempPdfPath));
+
+        }
+        
+        
         // Eliminar el archivo temporal
         unlink($tempPdfPath);
         
         return response()->json(['message' => 'Correo con PDF adjunto enviado correctamente.']);
     }
+    
 }

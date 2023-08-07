@@ -14,10 +14,10 @@
             <div class="col-1 d-flex justify-content-center pdf small" data-bs-toggle="tooltip" data-bs-placement="top" title="Descargar un excel del listado" id="excelTrabajadores">
                 {{ svg('fileicon-microsoft-excel') }}
             </div>
-            <div class="col-1 d-flex justify-content-center pdf small" data-bs-toggle="tooltip" data-bs-placement="top" title="Enviar el listado a mi correo electronico" id="recibirEmail">
+            <div class="col-1 d-flex justify-content-center pdf small" data-bs-toggle="tooltip" data-bs-placement="top" title="Enviar el listado a mi correo electronico" id="recibirEmailTrabajador">
                 {{ svg('iconoir-mail-in') }}
             </div>
-            <div class="col-1 d-flex justify-content-center pdf small" data-bs-toggle="tooltip" data-bs-placement="top" title="Enviar el listado a otra persona">
+            <div class="col-1 d-flex justify-content-center pdf small" data-bs-toggle="tooltip" data-bs-placement="top" title="Enviar el listado a otra persona" id="enviarEmailTrabajador">
                 {{ svg('iconoir-mail-out') }}
             </div>
         </div>
@@ -348,5 +348,6 @@
                 </div>
             </div>
         </div>
+        
     </div>
 @endsection

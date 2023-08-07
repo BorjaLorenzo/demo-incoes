@@ -58,6 +58,9 @@ Route::middleware('auth')->group(function () {
     Route::get('personal', [Workers::class, 'mainView'])
         ->name('personal');
 
+    Route::get('dashboard', [Workers::class, 'dashboard'])
+        ->name('dashboard');
+
     Route::post('/datosTrabajador', [Workers::class, 'getWorker'])
         ->name('getworker');
 
@@ -87,7 +90,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/get/excel/trabajadores', [Workers::class, 'getExcelTrabajadores'])
         ->name('getExcelTrabajadores');
-        
+
     Route::get('/send/pdf/trabajadores', [Workers::class, 'generarPDFListaPersonal'])
         ->name('generarPDFListaPersonal');
 });

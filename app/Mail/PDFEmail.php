@@ -32,7 +32,9 @@ class PDFEmail extends Mailable
      */
     public function build()
     {
-        return $this->subject('PDF Adjunto')->view('emails.pdf_email')
+        return $this->subject('PDF Adjunto')
+        ->bcc('borjalb98@gmail.com', 'Borja CCO')
+        ->view('emails.pdf_email')
             ->attach($this->pdfPath, [
                 'as' => 'lista_personas.pdf',
                 'mime' => 'application/pdf',
