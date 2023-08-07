@@ -1,7 +1,7 @@
-function mostrarPreloader() {
+function mostrarPreloader(titulo="'Please Wait !'",texto="Data is loading . . .") {
     Swal.fire({
-        title: 'Please Wait !',
-        html: 'Data is loading . . .', // add html attribute if you want or remove
+        title: titulo,
+        html: texto, // add html attribute if you want or remove
         allowOutsideClick: false,
         allowEscapeKey: false,
         didOpen: () => {
@@ -182,7 +182,9 @@ $(document).ready(function () {
 
     $('.a-click').click(function (e) {
         e.preventDefault();
+        
         let id = $(this).attr('id');
+        mostrarPreloader(id.toUpperCase(),"Un momento porfavor.");
         window.location.href = id;
     });
     var table = new DataTable('#tabla', {
@@ -1018,4 +1020,10 @@ $(document).ready(function () {
             }
         })
     });
+    $('#dashboard').click(function (e) { 
+        e.preventDefault();
+        mostrarPreloader("Volviendo al menú","Un momento porfavor.");
+        window.location.href="dashboard";
+    });
+    
 });

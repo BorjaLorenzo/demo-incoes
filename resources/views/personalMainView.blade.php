@@ -8,6 +8,9 @@
             </div>
         </div>
         <div class="row mt-4 dash-icon-hover justify-content-center">
+            <div class="col-1 d-flex justify-content-center small" data-bs-toggle="tooltip" data-bs-placement="top" title="Volver al menú" style="transform: scaleX(-1);" id="dashboard">
+                {{ svg('icomoon-exit') }}
+            </div>
             <div class="col-1 d-flex justify-content-center adduser small" data-bs-toggle="tooltip" data-bs-placement="top" title="Añadir un nuevo trabajador">
                 {{ svg('ri-user-add-line') }}
             </div>
@@ -348,6 +351,6 @@
                 </div>
             </div>
         </div>
-        
+
     </div>
 @endsection
