@@ -306,7 +306,7 @@ class Workers extends Controller
 
     public function generarPDFListaPersonal(Request $request)
     {
-        set_time_limit(120);
+        //set_time_limit(120);
         $personas = $this->workers->getWorkersAllByClientForExcel(Auth::user()->company)->toArray();
         $data = ['personas' => $personas];
 
