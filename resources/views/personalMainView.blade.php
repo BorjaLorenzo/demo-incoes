@@ -8,20 +8,25 @@
             </div>
         </div>
         <div class="row mt-4 dash-icon-hover justify-content-center">
-            <div class="col-1 d-flex justify-content-center small" data-bs-toggle="tooltip" data-bs-placement="top" title="Volver al menú" style="transform: scaleX(-1);" id="dashboard">
-                {{ svg('icomoon-exit') }}
+            <div class="col-1 d-flex justify-content-center small" data-bs-toggle="tooltip" data-bs-placement="top"
+                title="Volver al menú" id="dashboard">
+                {{ svg('ri-logout-box-line') }}
             </div>
-            <div class="col-1 d-flex justify-content-center adduser small" data-bs-toggle="tooltip" data-bs-placement="top" title="Añadir un nuevo trabajador">
+            <div class="col-1 d-flex justify-content-center adduser small" data-bs-toggle="tooltip" data-bs-placement="top"
+                title="Añadir un nuevo trabajador">
                 {{ svg('ri-user-add-line') }}
             </div>
-            <div class="col-1 d-flex justify-content-center pdf small" data-bs-toggle="tooltip" data-bs-placement="top" title="Descargar un excel del listado" id="excelTrabajadores">
-                {{ svg('fileicon-microsoft-excel') }}
+            <div class="col-1 d-flex justify-content-center pdf small" data-bs-toggle="tooltip" data-bs-placement="top"
+                title="Descargar un excel del listado" id="excelTrabajadores">
+                {{ svg('ri-file-excel-2-line') }}
             </div>
-            <div class="col-1 d-flex justify-content-center pdf small" data-bs-toggle="tooltip" data-bs-placement="top" title="Enviar el listado a mi correo electronico" id="recibirEmailTrabajador">
-                {{ svg('iconoir-mail-in') }}
+            <div class="col-1 d-flex justify-content-center pdf small" data-bs-toggle="tooltip" data-bs-placement="top"
+                title="Enviar el listado a mi correo electronico" id="recibirEmailTrabajador">
+                {{ svg('ri-mail-download-line') }}
             </div>
-            <div class="col-1 d-flex justify-content-center pdf small" data-bs-toggle="tooltip" data-bs-placement="top" title="Enviar el listado a otra persona" id="enviarEmailTrabajador">
-                {{ svg('iconoir-mail-out') }}
+            <div class="col-1 d-flex justify-content-center pdf small" data-bs-toggle="tooltip" data-bs-placement="top"
+                title="Enviar el listado a otra persona" id="enviarEmailTrabajador">
+                {{ svg('ri-send-plane-fill') }}
             </div>
         </div>
         <div class="table-responsive">
@@ -287,17 +292,18 @@
                                         <div class="mb-3">
                                             <label for="email" class="form-label">Email</label>
                                             <input type="email" class="form-control" id="emailAdd" name="email"
-                                            data-bs-toggle="tooltip" title="Formato no válido" data-bs-placement="right" required>
+                                                data-bs-toggle="tooltip" title="Formato no válido"
+                                                data-bs-placement="right" required>
                                         </div>
                                         <div class="mb-3">
                                             <label for="contrasenia" class="form-label">Contraseña</label>
-                                            <input type="password" class="form-control" id="contrasenia"
-                                                name="password" data-bs-toggle="tooltip" title="La contraseña es muy débil" data-bs-placement="right" required>
+                                            <input type="password" class="form-control" id="contrasenia" name="password"
+                                                data-bs-toggle="tooltip" title="La contraseña es muy débil"
+                                                data-bs-placement="right" required>
                                         </div>
                                         <div class="mb-3">
                                             <label for="sex" class="form-label">Sexo</label>
-                                            <select class="form-select" id="sexAdd" name="sex"
-                                                required>
+                                            <select class="form-select" id="sexAdd" name="sex" required>
                                                 <option value="Male">Male</option>
                                                 <option value="Female">Female</option>
                                                 <option value="Other">Other</option>
@@ -312,7 +318,7 @@
                                                 <option value="PASSPORT">PASSPORT</option>
                                             </select>
                                         </div>
-                                        
+
                                         <div class="mb-3">
                                             <label for="dni" class="form-label">Numero de identificacion</label>
                                             <input type="text" class="form-control" id="dniAdd" name="dni"
@@ -339,7 +345,8 @@
                                         {{-- <button type="submit" class="btn btn-primary">Enviar</button> --}}
                                     </form>
                                     <br>
-                                    <p id="errorMessage" style="display: none; color:red;text-align: center;">Algunos de los
+                                    <p id="errorMessage" style="display: none; color:red;text-align: center;">Algunos de
+                                        los
                                         campos anteriores no son validos, por favor reviselos.</p>
                                 </div>
                             </div>
