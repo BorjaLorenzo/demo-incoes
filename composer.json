@@ -6,17 +6,15 @@
     "license": "MIT",
     "require": {
         "php": "^7.3|^8.0",
-        
-        "fruitcake/laravel-cors": "^2.0",
-        "guzzlehttp/guzzle": "^7.0.1",
-        
-        "laravel/framework": "^8.75",
-        "laravel/sanctum": "^2.11",
-        "laravel/tinker": "^2.5",
-
         "andreiio/blade-remix-icon": "^2.4",
         "barryvdh/laravel-dompdf": "^2.0",
         "blade-ui-kit/blade-ui-kit": "^0.3.4",
+        "egulias/email-validator": "^2.1",
+        "fruitcake/laravel-cors": "^2.0",
+        "guzzlehttp/guzzle": "^7.0.1",
+        "laravel/framework": "^8.75",
+        "laravel/sanctum": "^2.11",
+        "laravel/tinker": "^2.5",
         "phpoffice/phpspreadsheet": "^1.29"
     },
     "require-dev": {

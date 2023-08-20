@@ -39,7 +39,11 @@
         </thead>
         <tbody>
             @foreach ($personas as $persona)
-                <tr>
+                <tr
+                    @if ($persona->activo==1)
+                        style="background-color:#E6B0AA"
+                    @endif                
+                >
                     <td>{{ $persona->name }}</td>
                     <td>{{ $persona->surname }}</td>
                     <td>{{ $persona->phone }}</td>

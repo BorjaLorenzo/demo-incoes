@@ -13,6 +13,9 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PDF;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\PDFEmail;
+use Exception;
+use Egulias\EmailValidator\EmailValidator;
+use Egulias\EmailValidator\Validation\RFCValidation;
 
 class Workers extends Controller
 {
@@ -27,7 +30,7 @@ class Workers extends Controller
     public function dashboard()
     {
         //Auth::user()->rol = 'new';
-        return view("dashboard",['rol'=>Auth::user()->rol]);
+        return view("dashboard", ['rol' => Auth::user()->rol]);
     }
     public function mainView()
     {
@@ -35,7 +38,7 @@ class Workers extends Controller
         if (Auth::user()->rol == 'root') {
             return view('personalMainView', ['test' => $this->workers->getWorkersAll(), 'rol' => Auth::user()->rol]);
         } else {
-            return view('personalMainView', ['test' => $this->workers->getWorkersAllByClient(Auth::user()->company), 'rol' => Auth::user()->rol]);
+            return view('personalMainView', ['test' => $this->workers->getWorkersAllByClient(Auth::user()->company, Auth::user()->dni), 'rol' => Auth::user()->rol]);
         }
     }
 
@@ -64,7 +67,7 @@ class Workers extends Controller
         if (Auth::user()->rol == "root") {
             $workers = $this->workers->getWorkersAll();
         } else {
-            $workers = $this->workers->getWorkersAllByClient(Auth::user()->company);
+            $workers = $this->workers->getWorkersAllByClient(Auth::user()->company, Auth::user()->dni);
         }
         return response()->json($workers);
     }
@@ -222,7 +225,7 @@ class Workers extends Controller
             'company' => Auth::user()->company,
             'sex' => $request->input('sex'),
         ];
-        
+
 
         $retorno = $this->workers->addTrabajador($userData);
         if (!$retorno) {
@@ -265,7 +268,7 @@ class Workers extends Controller
         $hoja->setCellValue('I1', 'Pais');
         $hoja->setCellValue('J1', 'Baja');
 
-        $retorno = $this->workers->getWorkersAllByClientForExcel(Auth::user()->company);
+        $retorno = $this->workers->getWorkersAllByClientForExcel(Auth::user()->company, Auth::user()->rol);
 
         // Obtiene los datos que deseas exportar (suponiendo que tienes un array llamado $datos)
         $datos = [
@@ -306,31 +309,41 @@ class Workers extends Controller
 
     public function generarPDFListaPersonal(Request $request)
     {
-        //set_time_limit(120);
-        $personas = $this->workers->getWorkersAllByClientForExcel(Auth::user()->company)->toArray();
-        $data = ['personas' => $personas];
 
-        $pdf = PDF::loadView('pdf.tabla_pdf', $data);
-        $pdf->set_option('dpi', 256);
-        // Guardar el PDF en el directorio de almacenamiento temporal
-        $tempPdfPath = sys_get_temp_dir() . '/lista_personas.pdf';
-        $pdf->save($tempPdfPath);
+        try {
+            //set_time_limit(120);
+            $personas = $this->workers->getWorkersAllByClientForExcel(Auth::user()->company, Auth::user()->rol)->toArray();
+            $data = ['personas' => $personas];
+
+            $pdf = PDF::loadView('pdf.tabla_pdf', $data);
+            $pdf->set_option('dpi', 256);
+            // Guardar el PDF en el directorio de almacenamiento temporal
+            $tempPdfPath = sys_get_temp_dir() . '/lista_personas.pdf';
+            $pdf->save($tempPdfPath);
+
+            $validator = new EmailValidator();
+
+            
+            if ($validator->isValid($request->input('email'), new RFCValidation())) {
+                //echo "El correo electrónico es válido.";
+            } else {
+                //echo "El correo electrónico no es válido.";
+            }
+
+            // Enviar el correo con el PDF adjunto
+            if ($request->input('email') == null) {
+                Mail::to(Auth::user()->email)->send(new PDFEmail($tempPdfPath));
+            } else {
+                Mail::to($request->input('email'))->send(new PDFEmail($tempPdfPath));
+            }
 
 
-        // Enviar el correo con el PDF adjunto
-        if ($request->input('email')==null) {
-            Mail::to(Auth::user()->email)->send(new PDFEmail($tempPdfPath));
+            // Eliminar el archivo temporal
+            unlink($tempPdfPath);
 
-        } else {
-            Mail::to($request->input('email'))->send(new PDFEmail($tempPdfPath));
-
+            return response()->json(['message' => 'Correo con PDF adjunto enviado correctamente.']);
+        } catch (Exception $e) {
+            return response()->json(['message' => 'error','statusText'=>$e->getMessage(),500]);
         }
-        
-        
-        // Eliminar el archivo temporal
-        unlink($tempPdfPath);
-        
-        return response()->json(['message' => 'Correo con PDF adjunto enviado correctamente.']);
     }
-    
 }

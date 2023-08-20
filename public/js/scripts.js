@@ -1,4 +1,4 @@
-function mostrarPreloader(titulo="'Please Wait !'",texto="Data is loading . . .") {
+function mostrarPreloader(titulo = "'Please Wait !'", texto = "Data is loading . . .") {
     Swal.fire({
         title: titulo,
         html: texto, // add html attribute if you want or remove
@@ -182,9 +182,9 @@ $(document).ready(function () {
 
     $('.a-click').click(function (e) {
         e.preventDefault();
-        
+
         let id = $(this).attr('id');
-        mostrarPreloader(id.toUpperCase(),"Un momento porfavor.");
+        mostrarPreloader(id.toUpperCase(), "Un momento porfavor.");
         window.location.href = id;
     });
     var table = new DataTable('#tabla', {
@@ -969,14 +969,18 @@ $(document).ready(function () {
             success: function (response) {
                 console.log(response);
                 //ocultarPreloader();
-                Swal.fire({
-                    title: "Lista enviada con exito!",
-                    icon: "success"
-                })
+                if (response.message != "error") {
+                    Swal.fire({
+                        title: "Lista enviada con exito!",
+                        icon: "success"
+                    })
+                } else {
+                    basicAlert("Error!", "Ha ocurrido un error en la creacion del archivo o el envio del correo, por favor recarga la pagina. Si no funciona contacte con el equipo técnico", "error");
+                }
             },
             error: function (error) {
                 ocultarPreloader();
-                basicAlert("Error!", "Ha ocurrido un error con la descarga del archivo, por favor recarga la pagina. Si no funciona contacte con el equipo técnico", "error");
+                basicAlert("Error!", "Ha ocurrido un error en la creacion del archivo o el envio del correo, por favor recarga la pagina. Si no funciona contacte con el equipo técnico", "error");
                 console.log('Error en el envio del email:', error);
             }
         });
@@ -990,40 +994,48 @@ $(document).ready(function () {
             inputAttributes: {
                 autocapitalize: 'off'
             },
-            inputPlaceholder:"Email",
+            inputPlaceholder: "Email",
             showCancelButton: true,
             confirmButtonText: 'Enviar',
             showLoaderOnConfirm: true,
             preConfirm: (login) => {
-                console.log(login);
-                var formData = {
-                    email: login,
-                };
-                mostrarPreloader();
-                $.ajax({
-                    type: "get",
-                    url: "/send/pdf/trabajadores",
-                    data: formData,
-                    dataType: "text",
-                    success: function (response) {
-                        Swal.fire({
-                            title: "Lista enviada con exito!",
-                            icon: "success"
-                        })
-                    }
-                });
+                return fetch('/send/pdf/trabajadores?email=' + encodeURIComponent(login))
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(response.statusText);
+                        }
+                        return response.json();
+                    })
+                    .catch(error => {
+                        Swal.showValidationMessage(
+                            `Request failed: ${error}`
+                        );
+
+                    });
             },
             allowOutsideClick: () => !Swal.isLoading()
         }).then((result) => {
             if (result.isConfirmed) {
-                
-            }
+                if (result.value.message=="error") {
+                    Swal.fire({
+                        title: 'Correo no enviado',
+                        icon: "error",
+                        html: "El correo proporcionado no es válido"
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'Correo enviado',
+                        icon: "success"
+                    });
+                }
+            };
+
         })
     });
-    $('#dashboard').click(function (e) { 
+    $('#dashboard').click(function (e) {
         e.preventDefault();
-        mostrarPreloader("Volviendo al menú","Un momento porfavor.");
-        window.location.href="dashboard";
+        mostrarPreloader("Volviendo al menú", "Un momento porfavor.");
+        window.location.href = "dashboard";
     });
-    
+
 });

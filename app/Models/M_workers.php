@@ -19,11 +19,12 @@ class M_workers extends Model
             ->get();
         return $workers;
     }
-    public function getWorkersAllByClient($clientCompanyID)
+    public function getWorkersAllByClient($clientCompanyID, $dni)
     {
         $workers = DB::table('users')
             ->select('dni', 'name', 'surname', 'phone', 'rol', 'activo')
             ->where('company', $clientCompanyID)
+            ->where('dni', '!=', $dni)
             ->get();
         return $workers;
     }
@@ -113,9 +114,9 @@ class M_workers extends Model
         $count = $query->count();
         return $count > 0;
     }
-    public function getWorkersAllByClientForExcel($clientCompanyID)
+    public function getWorkersAllByClientForExcel($clientCompanyID,$rol)
     {
-        if (Auth::user()->rol=="root") {
+        if ($rol=="root") {
             $workers = DB::table('users')
             ->select('*')
             ->get();

@@ -15,6 +15,13 @@ class AppServiceProvider extends ServiceProvider
     {
         //
     }
+    //Descomentar esta funcion cuando se suba una copia del proyecto entera
+    // public function register()
+    // {
+    //     $this->app->bind('path.public',function(){
+    //         return'/usr/home/sosmanager.xyz/web';
+    //         });
+    // }
 
     /**
      * Bootstrap any application services.
