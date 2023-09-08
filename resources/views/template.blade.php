@@ -17,6 +17,7 @@
 
     <!-- Sweet Alert 2 -->
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.10/dist/sweetalert2.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
     <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
     <title>Dashboard</title>
     <style>
@@ -33,6 +34,12 @@
         .dash-icon-hover>div.small>svg {
             width: 50px;
             height: 50px;
+        }
+
+        .swiper-slide.swiper-slide-active {
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
         /* .dash-icon-hover{
@@ -134,6 +141,43 @@
             border-color: #843534;
             box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #ce8483
         }
+
+        .navbar.navbar-expand-lg.sticky-top.bg-body-tertiary.bg-dark {
+            width: 112%;
+            margin-left: -6%;
+        }
+
+        .carousel-indicators li {
+            width: 15px;
+            /* Tamaño reducido para pantallas pequeñas */
+            height: 15px;
+            /* Tamaño reducido para pantallas pequeñas */
+        }
+
+        .carousel-inner .carousel-item {
+            text-align: center;
+        }
+
+        .carousel-inner i {
+            font-size: 30px;
+            /* Tamaño de fuente reducido para pantallas pequeñas */
+        }
+
+        .swiper {
+            width: 100%;
+            /* height: 45vw; */
+        }
+
+        .swiper-button-next,
+        .swiper-button-prev
+         {
+            color: #212529
+        }
+        .swiper-pagination-bullet-active{
+            background-color: #212529
+        }
+
+        
     </style>
     @bukStyles(true)
 </head>
@@ -184,7 +228,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/libphonenumber-js/1.9.19/libphonenumber-js.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/zxcvbn/4.4.2/zxcvbn.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/validator/13.6.0/validator.min.js"></script>
-    
+    <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
     <script src="{{ asset('js/scripts.js') }}"></script>
     @bukScripts(true)
 </body>

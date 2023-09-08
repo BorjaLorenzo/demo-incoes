@@ -1,35 +1,65 @@
 @extends('template')
 @section('content')
-    <style></style>
-    <div class="container">
+    <?php
+    // Obtén el agente de usuario del navegador
+    $userAgent = $_SERVER['HTTP_USER_AGENT'];
+
+    if (strpos($userAgent, 'Mobile') !== false || strpos($userAgent, 'Android') !== false || strpos($userAgent, 'iPhone') !== false || strpos($userAgent, 'iPad') !== false) { ?>
+
+    <?php } else {?>
+    <div class="container" id="ezo">
+        <?php }?>
+
         <div class="row mt-4">
             <div class="col d-flex justify-content-center">
                 <h2 class="text-center text-black" style="text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);">Trabajadores</h2>
             </div>
         </div>
-        <div class="row mt-4 dash-icon-hover justify-content-center">
-            <div class="col-1 d-flex justify-content-center small" data-bs-toggle="tooltip" data-bs-placement="top"
-                title="Volver al menú" id="dashboard">
+        {{-- <div class="row mt-4 dash-icon-hover justify-content-center">
+            <div class="col-3 col-sm-2 col-md-2 d-flex justify-content-center small" data-bs-toggle="tooltip"
+                data-bs-placement="top" title="Volver al menú" id="dashboard">
                 {{ svg('ri-logout-box-line') }}
             </div>
-            <div class="col-1 d-flex justify-content-center adduser small" data-bs-toggle="tooltip" data-bs-placement="top"
-                title="Añadir un nuevo trabajador">
+            <div class="col-3 col-sm-2 col-md-2 d-flex justify-content-center adduser small" data-bs-toggle="tooltip"
+                data-bs-placement="top" title="Añadir un nuevo trabajador">
                 {{ svg('ri-user-add-line') }}
             </div>
-            <div class="col-1 d-flex justify-content-center pdf small" data-bs-toggle="tooltip" data-bs-placement="top"
-                title="Descargar un excel del listado" id="excelTrabajadores">
+            <div class="col-3 col-sm-2 col-md-2 d-flex justify-content-center pdf small" data-bs-toggle="tooltip"
+                data-bs-placement="top" title="Descargar un excel del listado" id="excelTrabajadores">
                 {{ svg('ri-file-excel-2-line') }}
             </div>
-            <div class="col-1 d-flex justify-content-center pdf small" data-bs-toggle="tooltip" data-bs-placement="top"
-                title="Enviar el listado a mi correo electronico" id="recibirEmailTrabajador">
+            <div class="col-3 col-sm-2 col-md-2 d-flex justify-content-center pdf small" data-bs-toggle="tooltip"
+                data-bs-placement="top" title="Enviar el listado a mi correo electrónico" id="recibirEmailTrabajador">
                 {{ svg('ri-mail-download-line') }}
             </div>
-            <div class="col-1 d-flex justify-content-center pdf small" data-bs-toggle="tooltip" data-bs-placement="top"
-                title="Enviar el listado a otra persona" id="enviarEmailTrabajador">
+            <div class="col-3 col-sm-2 col-md-2 d-flex justify-content-center pdf small" data-bs-toggle="tooltip"
+                data-bs-placement="top" title="Enviar el listado a otra persona" id="enviarEmailTrabajador">
                 {{ svg('ri-send-plane-fill') }}
             </div>
+        </div> --}}
+        <div class="row mt-4 justify-content-center">
+            <!-- Slider main container -->
+            <div class="swiper">
+                <!-- Additional required wrapper -->
+                <div class="swiper-wrapper">
+                    <!-- Slides -->
+                    <div class="swiper-slide"><div class="icono-trabajadores">{{ svg('ri-logout-box-line') }}</div></div>
+                    <div class="swiper-slide"><div class="icono-trabajadores"> {{ svg('ri-user-add-line') }}</div></div>
+                    <div class="swiper-slide"><div class="icono-trabajadores">{{ svg('ri-file-excel-2-line') }}</div></div>
+                    ...
+                </div>
+                <!-- If we need pagination -->
+                <div class="swiper-pagination"></div>
+
+                <!-- If we need navigation buttons -->
+                {{-- <div class="swiper-button-prev"></div>
+                <div class="swiper-button-next"></div> --}}
+
+                <!-- If we need scrollbar -->
+                <div class="swiper-scrollbar"></div>
+            </div>
         </div>
-        <div class="table-responsive">
+        <div class="table-responsive mt-4">
             <table class="table table-hover table-striped" id="tabla">
                 <thead>
                     <tr>
@@ -100,11 +130,13 @@
                                 <input type="hidden" name="dni_old" id="dni_old">
                                 <div class="row pb-4">
                                     <div class="col"><label for="name">Name:</label></div>
-                                    <div class="col"><input type="text" id="name" name="name"></div>
+                                    <div class="col"><input type="text" id="name" name="name"
+                                            class="form-control"></div>
                                 </div>
                                 <div class="row pb-4">
                                     <div class="col"><label for="surname">Surname:</label></div>
-                                    <div class="col"><input type="text" id="surname" name="surname"></div>
+                                    <div class="col"><input type="text" id="surname" name="surname"
+                                            class="form-control"></div>
                                 </div>
                                 <div class="row pb-4">
                                     <div class="col"><label for="sex">Sex:</label></div>
@@ -117,7 +149,8 @@
                                 </div>
                                 <div class="row pb-4">
                                     <div class="col"><label for="phone">Phone:</label></div>
-                                    <div class="col"><input type="text" id="phone" name="phone"></div>
+                                    <div class="col"><input type="text" id="phone" name="phone"
+                                            class="form-control"></div>
                                 </div>
                                 <div class="row pb-4">
                                     <div class="col"><label for="dni_type">Identification Number:</label></div>
@@ -131,30 +164,29 @@
                                 </div>
                                 <div class="row pb-4">
                                     <div class="col"><label for="dni">Identification:</label></div>
-                                    <div class="col"><input type="text" id="dni" name="dni"></div>
+                                    <div class="col"><input type="text" id="dni" name="dni"
+                                            class="form-control"></div>
                                 </div>
-
                                 <div class="row pb-4">
                                     <div class="col"><label for="country">Country:</label></div>
-                                    <div class="col"><select name="country" id="country" class="custom-select"
-                                            style="width: 95%">
+                                    <div class="col">
+                                        <select name="country" id="country" class="custom-select" style="width: 95%">
 
-                                        </select></div>
+                                        </select>
+                                    </div>
                                 </div>
                                 <div class="row pb-4">
                                     <div class="col"><label for="email">Email:</label></div>
-                                    <div class="col"><input type="text" id="email" name="email"></div>
+                                    <div class="col"><input type="text" id="email" name="email"
+                                            class="form-control"></div>
                                 </div>
                                 <div class="row">
                                     <div class="col"><label for="rol">Rol:</label></div>
                                     <div class="col">
-                                        <div class="col">
-                                            <select name="rol" id="rol" class="custom-select"
-                                                style="width: 95%">
-                                                <option value="ENCARGADO">ENCARGADO</option>
-                                                <option value="TRABAJADOR">TRABAJADOR</option>
-                                            </select>
-                                        </div>
+                                        <select name="rol" id="rol" class="custom-select" style="width: 95%">
+                                            <option value="ENCARGADO">ENCARGADO</option>
+                                            <option value="TRABAJADOR">TRABAJADOR</option>
+                                        </select>
                                     </div>
                                 </div>
                             </form>
@@ -359,5 +391,9 @@
             </div>
         </div>
 
+        <?php if (strpos($userAgent, 'Mobile') !== false || strpos($userAgent, 'Android') !== false || strpos($userAgent, 'iPhone') !== false || strpos($userAgent, 'iPad') !== false) { ?>
+
+        <?php } else {?>
     </div>
+    <?php }?>
 @endsection

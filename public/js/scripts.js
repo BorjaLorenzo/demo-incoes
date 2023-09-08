@@ -43,7 +43,7 @@ function vaciarYRellenarTabla(titulo, texto, icono) {
         dataType: 'json',
         success: function (data) {
             // Vaciar la tabla
-            //console.log(data);
+            console.log(data);
             $('#tabla').DataTable().clear();
             data.forEach(element => {
                 var disableButtons = element.activo === 1;
@@ -433,6 +433,10 @@ $(document).ready(function () {
 
         },
         paging: false,
+
+        columnDefs: [
+            { targets: [2, 3, 4], className: 'd-none d-sm-table-cell' } // Oculta columnas 2 y 3 en pantallas pequeñas
+        ]
     });
     $('#tabla').on('click', '.editmodal', function (e) {
         // Lógica para el botón editar
@@ -597,7 +601,7 @@ $(document).ready(function () {
                 success: function (response) {
 
                     $('#editarModal').modal('toggle');
-                    //console.log(response);
+                    console.log(response);
                     if (response) {
                         vaciarYRellenarTabla("Updated!", "Worker update correctly.", "success");
                     } else {
@@ -1016,7 +1020,7 @@ $(document).ready(function () {
             allowOutsideClick: () => !Swal.isLoading()
         }).then((result) => {
             if (result.isConfirmed) {
-                if (result.value.message=="error") {
+                if (result.value.message == "error") {
                     Swal.fire({
                         title: 'Correo no enviado',
                         icon: "error",
@@ -1037,5 +1041,25 @@ $(document).ready(function () {
         mostrarPreloader("Volviendo al menú", "Un momento porfavor.");
         window.location.href = "dashboard";
     });
-
+    const swiper = new Swiper('.swiper', {
+        // Optional parameters
+        direction: 'horizontal',
+        loop: true,
+      
+        // If we need pagination
+        pagination: {
+          el: '.swiper-pagination',
+        },
+      
+        // Navigation arrows
+        // navigation: {
+        //   nextEl: '.swiper-button-next',
+        //   prevEl: '.swiper-button-prev',
+        // },
+      
+        // And if we need scrollbar
+        // scrollbar: {
+        //   el: '.swiper-scrollbar',
+        // },
+      });
 });
