@@ -163,21 +163,9 @@
             /* Tamaño de fuente reducido para pantallas pequeñas */
         }
 
-        .swiper {
-            width: 100%;
-            /* height: 45vw; */
+        .dropdown svg {
+            width: 10%;
         }
-
-        .swiper-button-next,
-        .swiper-button-prev
-         {
-            color: #212529
-        }
-        .swiper-pagination-bullet-active{
-            background-color: #212529
-        }
-
-        
     </style>
     @bukStyles(true)
 </head>
@@ -206,6 +194,37 @@
                             </a>
                             <ul class="dropdown-menu ">
                                 <li><a class="dropdown-item" href="logout">Desconectar</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown" id="opcionesPersonalNavbar" hidden>
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                                aria-expanded="false">
+                                Opciones
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <div class="dropdown-item" id="dashboard">{{ svg('ri-logout-box-line') }}<label
+                                            for="">Menú Principal</label></div>
+                                </li>
+                                <li>
+                                    <div class="dropdown-item" id="dashboard">{{ svg('ri-user-add-line') }}<label
+                                            for="">Añadir usuario</label></div>
+                                </li>
+                                <li>
+                                    <div class="dropdown-item" id="excelTrabajadores">
+                                        {{ svg('ri-file-excel-2-line') }}<label for="">Descargar
+                                            Trabajadores</label></div>
+                                </li>
+                                <li>
+                                    <div class="dropdown-item" id="recibirEmailTrabajador">
+                                        {{ svg('ri-mail-download-line') }}<label for="">Enviarme listado</label>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="dropdown-item" id="enviarEmailTrabajador">
+                                        {{ svg('ri-send-plane-fill') }}<label for="">Enviar listado</label>
+                                    </div>
+                                </li>
                             </ul>
                         </li>
                     </ul>

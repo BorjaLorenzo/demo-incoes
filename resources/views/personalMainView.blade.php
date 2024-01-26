@@ -37,28 +37,7 @@
                 {{ svg('ri-send-plane-fill') }}
             </div>
         </div> --}}
-        <div class="row mt-4 justify-content-center">
-            <!-- Slider main container -->
-            <div class="swiper">
-                <!-- Additional required wrapper -->
-                <div class="swiper-wrapper">
-                    <!-- Slides -->
-                    <div class="swiper-slide"><div class="icono-trabajadores">{{ svg('ri-logout-box-line') }}</div></div>
-                    <div class="swiper-slide"><div class="icono-trabajadores"> {{ svg('ri-user-add-line') }}</div></div>
-                    <div class="swiper-slide"><div class="icono-trabajadores">{{ svg('ri-file-excel-2-line') }}</div></div>
-                    ...
-                </div>
-                <!-- If we need pagination -->
-                <div class="swiper-pagination"></div>
-
-                <!-- If we need navigation buttons -->
-                {{-- <div class="swiper-button-prev"></div>
-                <div class="swiper-button-next"></div> --}}
-
-                <!-- If we need scrollbar -->
-                <div class="swiper-scrollbar"></div>
-            </div>
-        </div>
+        
         <div class="table-responsive mt-4">
             <table class="table table-hover table-striped" id="tabla">
                 <thead>
