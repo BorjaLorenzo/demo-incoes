@@ -15,7 +15,7 @@
                 <h2 class="text-center text-black" style="text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);">Trabajadores</h2>
             </div>
         </div>
-        {{-- <div class="row mt-4 dash-icon-hover justify-content-center">
+        <div class="row mt-4 dash-icon-hover justify-content-center d-none d-md-flex">
             <div class="col-3 col-sm-2 col-md-2 d-flex justify-content-center small" data-bs-toggle="tooltip"
                 data-bs-placement="top" title="Volver al menú" id="dashboard">
                 {{ svg('ri-logout-box-line') }}
@@ -36,7 +36,7 @@
                 data-bs-placement="top" title="Enviar el listado a otra persona" id="enviarEmailTrabajador">
                 {{ svg('ri-send-plane-fill') }}
             </div>
-        </div> --}}
+        </div>
         
         <div class="table-responsive mt-4">
             <table class="table table-hover table-striped" id="tabla">

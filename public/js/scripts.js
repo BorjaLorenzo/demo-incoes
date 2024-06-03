@@ -43,7 +43,7 @@ function vaciarYRellenarTabla(titulo, texto, icono) {
         dataType: 'json',
         success: function (data) {
             // Vaciar la tabla
-            console.log(data);
+            //console.log(data);
             $('#tabla').DataTable().clear();
             data.forEach(element => {
                 var disableButtons = element.activo === 1;
@@ -616,7 +616,7 @@ $(document).ready(function () {
                 error: function (xhr, status, error) {
                     // Manejar el error
 
-                    //console.log(xhr.responseText);
+                    console.log(xhr.responseText);
                     ocultarPreloader();
                 }
             });
@@ -1042,6 +1042,8 @@ $(document).ready(function () {
         window.location.href = "dashboard";
     });
     if (window.location.pathname == '/personal') {
-        $('#opcionesPersonalNavbar').removeAttr('hidden');
+        document.getElementById("opcionesPersonalNavbar").style="display:";
+    }else{
+        document.getElementById("opcionesPersonalNavbar").style="display:none!important";
     }
 });
